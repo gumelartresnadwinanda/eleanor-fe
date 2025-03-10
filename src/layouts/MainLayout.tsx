@@ -2,11 +2,12 @@ import { useState } from "react";
 import { Outlet } from "react-router-dom";
 import Header from "../components/Header";
 import Sidebar from "../components/Sidebar";
+import MobileFooter from "../components/MobileFooter";
 import useMediaQuery from "../hooks/useMediaQuery";
 
 const MainLayout = () => {
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const isPhoneScreen = useMediaQuery("(max-width: 767px)");
+  const [isSidebarOpen, setIsSidebarOpen] = useState(!isPhoneScreen);
 
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen);
@@ -17,12 +18,13 @@ const MainLayout = () => {
       <Header toggleSidebar={toggleSidebar} />
       <div className="flex flex-grow relative">
         <Sidebar isOpen={isSidebarOpen && !isPhoneScreen} />
-        <div className={`flex flex-col items-center justify-center flex-grow p-4 transition-all duration-300 ${isSidebarOpen && !isPhoneScreen ? 'ml-64' : 'ml-0'}`}>
-          <div className="w-full max-w-sm p-6 bg-white dark:bg-gray-800 shadow-md rounded-lg md:max-w-md lg:max-w-lg xl:max-w-xl">
-            <Outlet />
+        <div className={`flex flex-col items-center justify-center p-4 transition-all duration-300 flex-grow ${isSidebarOpen && !isPhoneScreen ? 'ml-64' : 'ml-0'} ${isPhoneScreen ? 'h-[calc(100vh-9rem)]' : ''}`}>
+          <div className="w-full p-6 bg-white dark:bg-gray-800 shadow-md rounded-lg">
+            <Outlet context={{ isPhoneScreen }} />
           </div>
         </div>
       </div>
+      {isPhoneScreen && <MobileFooter />}
     </div>
   );
 };
