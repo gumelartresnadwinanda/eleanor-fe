@@ -1,70 +1,40 @@
+import { useState, useEffect } from "react";
 import { useOutletContext } from "react-router-dom";
-import { useState, useMemo } from "react";
+import axios from "axios";
 import { Grid, List } from "lucide-react";
 import { Button } from "../components/Button";
-import MediaModal from "../components/MediaModal"; // Import MediaModal
+import MediaModal from "../components/MediaModal";
+import { MediaResponse, Media } from "../types/MediaResponse";
 
 const AllMediaPage = () => {
   const { isPhoneScreen } = useOutletContext<{ isPhoneScreen: boolean }>();
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const [isGridView, setIsGridView] = useState(true);
+  const [media, setMedia] = useState<Media[]>([]);
+  const [page, setPage] = useState(1);
+  const [hasMore, setHasMore] = useState(true);
 
-  // TODO: Replace the media array with your own media array
-  const media = useMemo(() => [
-    { thumbnail: "/thumbnails/thumb_IMG_6548.JPG.jpg", image: "/thumbnails/thumb_IMG_6548.JPG.jpg" },
-    { thumbnail: "/thumbnails/thumb_IMG_6549.JPG.jpg", image: "/thumbnails/thumb_IMG_6549.JPG.jpg" },
-    { thumbnail: "/thumbnails/thumb_IMG_6550.JPG.jpg", image: "/thumbnails/thumb_IMG_6550.JPG.jpg" },
-    { thumbnail: "/thumbnails/thumb_IMG_6551.JPG.jpg", image: "/thumbnails/thumb_IMG_6551.JPG.jpg" },
-    { thumbnail: "/thumbnails/thumb_IMG_6552.JPG.jpg", image: "/thumbnails/thumb_IMG_6552.JPG.jpg" },
-    { thumbnail: "/thumbnails/thumb_IMG_6553.JPG.jpg", image: "/thumbnails/thumb_IMG_6553.JPG.jpg" },
-    { thumbnail: "/thumbnails/thumb_IMG_6554.JPG.jpg", image: "/thumbnails/thumb_IMG_6554.JPG.jpg" },
-    { thumbnail: "/thumbnails/thumb_IMG_6555.JPG.jpg", image: "/thumbnails/thumb_IMG_6555.JPG.jpg" },
-    { thumbnail: "/thumbnails/thumb_IMG_6556.JPG.jpg", image: "/thumbnails/thumb_IMG_6556.JPG.jpg" },
-    { thumbnail: "/thumbnails/thumb_IMG_6557.JPG.jpg", image: "/thumbnails/thumb_IMG_6557.JPG.jpg" },
-    { thumbnail: "/thumbnails/thumb_IMG_6558.JPG.jpg", image: "/thumbnails/thumb_IMG_6558.JPG.jpg" },
-    { thumbnail: "/thumbnails/thumb_IMG_6559.JPG.jpg", image: "/thumbnails/thumb_IMG_6559.JPG.jpg" },
-    { thumbnail: "/thumbnails/thumb_IMG_6560.JPG.jpg", image: "/thumbnails/thumb_IMG_6560.JPG.jpg" },
-    { thumbnail: "/thumbnails/thumb_IMG_6561.JPG.jpg", image: "/thumbnails/thumb_IMG_6561.JPG.jpg" },
-    { thumbnail: "/thumbnails/thumb_IMG_6562.JPG.jpg", image: "/thumbnails/thumb_IMG_6562.JPG.jpg" },
-    { thumbnail: "/thumbnails/thumb_IMG_6563.JPG.jpg", image: "/thumbnails/thumb_IMG_6563.JPG.jpg" },
-    { thumbnail: "/thumbnails/thumb_IMG_6564.JPG.jpg", image: "/thumbnails/thumb_IMG_6564.JPG.jpg" },
-    { thumbnail: "/thumbnails/thumb_IMG_6565.JPG.jpg", image: "/thumbnails/thumb_IMG_6565.JPG.jpg" },
-    { thumbnail: "/thumbnails/thumb_IMG_6566.JPG.jpg", image: "/thumbnails/thumb_IMG_6566.JPG.jpg" },
-    { thumbnail: "/thumbnails/thumb_IMG_6567.JPG.jpg", image: "/thumbnails/thumb_IMG_6567.JPG.jpg" },
-    { thumbnail: "/thumbnails/thumb_IMG_6568.JPG.jpg", image: "/thumbnails/thumb_IMG_6568.JPG.jpg" },
-    { thumbnail: "/thumbnails/thumb_IMG_6569.JPG.jpg", image: "/thumbnails/thumb_IMG_6569.JPG.jpg" },
-    { thumbnail: "/thumbnails/thumb_IMG_6570.JPG.jpg", image: "/thumbnails/thumb_IMG_6570.JPG.jpg" },
-    { thumbnail: "/thumbnails/thumb_IMG_6571.JPG.jpg", image: "/thumbnails/thumb_IMG_6571.JPG.jpg" },
-    { thumbnail: "/thumbnails/thumb_IMG_6572.JPG.jpg", image: "/thumbnails/thumb_IMG_6572.JPG.jpg" },
-    { thumbnail: "/thumbnails/thumb_IMG_6573.JPG.jpg", image: "/thumbnails/thumb_IMG_6573.JPG.jpg" },
-    { thumbnail: "/thumbnails/thumb_IMG_6574.JPG.jpg", image: "/thumbnails/thumb_IMG_6574.JPG.jpg" },
-    { thumbnail: "/thumbnails/thumb_IMG_6575.JPG.jpg", image: "/thumbnails/thumb_IMG_6575.JPG.jpg" },
-    { thumbnail: "/thumbnails/thumb_IMG_6576.JPG.jpg", image: "/thumbnails/thumb_IMG_6576.JPG.jpg" },
-    { thumbnail: "/thumbnails/thumb_IMG_6577.JPG.jpg", image: "/thumbnails/thumb_IMG_6577.JPG.jpg" },
-    { thumbnail: "/thumbnails/thumb_IMG_6578.JPG.jpg", image: "/thumbnails/thumb_IMG_6578.JPG.jpg" },
-    { thumbnail: "/thumbnails/thumb_IMG_6579.JPG.jpg", image: "/thumbnails/thumb_IMG_6579.JPG.jpg" },
-    { thumbnail: "/thumbnails/thumb_IMG_6580.JPG.jpg", image: "/thumbnails/thumb_IMG_6580.JPG.jpg" },
-    { thumbnail: "/thumbnails/thumb_IMG_6581.JPG.jpg", image: "/thumbnails/thumb_IMG_6581.JPG.jpg" },
-    { thumbnail: "/thumbnails/thumb_IMG_6582.JPG.jpg", image: "/thumbnails/thumb_IMG_6582.JPG.jpg" },
-    { thumbnail: "/thumbnails/thumb_IMG_6583.JPG.jpg", image: "/thumbnails/thumb_IMG_6583.JPG.jpg" },
-    { thumbnail: "/thumbnails/thumb_IMG_6584.JPG.jpg", image: "/thumbnails/thumb_IMG_6584.JPG.jpg" },
-    { thumbnail: "/thumbnails/thumb_IMG_6585.JPG.jpg", image: "/thumbnails/thumb_IMG_6585.JPG.jpg" },
-    { thumbnail: "/thumbnails/thumb_IMG_6586.JPG.jpg", image: "/thumbnails/thumb_IMG_6586.JPG.jpg" },
-    { thumbnail: "/thumbnails/thumb_IMG_6587.JPG.jpg", image: "/thumbnails/thumb_IMG_6587.JPG.jpg" },
-    { thumbnail: "/thumbnails/thumb_IMG_6588.JPG.jpg", image: "/thumbnails/thumb_IMG_6588.JPG.jpg" },
-    { thumbnail: "/thumbnails/thumb_IMG_6589.JPG.jpg", image: "/thumbnails/thumb_IMG_6589.JPG.jpg" },
-    { thumbnail: "/thumbnails/thumb_IMG_6590.JPG.jpg", image: "/thumbnails/thumb_IMG_6590.JPG.jpg" },
-    { thumbnail: "/thumbnails/thumb_IMG_6591.JPG.jpg", image: "/thumbnails/thumb_IMG_6591.JPG.jpg" },
-    { thumbnail: "/thumbnails/thumb_IMG_6592.JPG.jpg", image: "/thumbnails/thumb_IMG_6592.JPG.jpg" },
-    { thumbnail: "/thumbnails/thumb_IMG_6593.JPG.jpg", image: "/thumbnails/thumb_IMG_6593.JPG.jpg" },
-    { thumbnail: "/thumbnails/thumb_IMG_6594.JPG.jpg", image: "/thumbnails/thumb_IMG_6594.JPG.jpg" },
-    { thumbnail: "/thumbnails/thumb_IMG_6595.JPG.jpg", image: "/thumbnails/thumb_IMG_6595.JPG.jpg" },
-    { thumbnail: "/thumbnails/thumb_IMG_6596.JPG.jpg", image: "/thumbnails/thumb_IMG_6596.JPG.jpg" },
-    { thumbnail: "/thumbnails/thumb_IMG_6597.JPG.jpg", image: "/thumbnails/thumb_IMG_6597.JPG.jpg" },
-    { thumbnail: "/thumbnails/thumb_IMG_6598.JPG.jpg", image: "/thumbnails/thumb_IMG_6598.JPG.jpg" },
-    { thumbnail: "/thumbnails/thumb_IMG_6599.JPG.jpg", image: "/thumbnails/thumb_IMG_6599.JPG.jpg" },
-    { thumbnail: "/thumbnails/thumb_IMG_6600.JPG.jpg", image: "/thumbnails/thumb_IMG_6600.JPG.jpg" },
-  ], []);
+  const fetchMedia = async (page: number) => {
+    try {
+      const response = await axios.get<MediaResponse>(`${import.meta.env.VITE_API_BASE_URL}/medias?page=${page}&limit=20`);
+      setMedia((prevMedia) => [...prevMedia, ...response.data.data]);
+      if (response.data.data.length < 20) {
+        setHasMore(false);
+      }
+    } catch (error) {
+      console.error("Error fetching media:", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchMedia(page);
+  }, [page]);
+
+  const loadMoreMedia = () => {
+    if (hasMore) {
+      setPage((prevPage) => prevPage + 1);
+    }
+  };
 
   return (
     <div className={`flex flex-col items-center justify-center ${isPhoneScreen ? 'text-center h-[calc(100vh-12rem)]' : 'h-[calc(100vh-8rem)]'}`}>
@@ -76,16 +46,25 @@ const AllMediaPage = () => {
             {media.map((src, index) => (
               <img
                 key={index}
-                src={isGridView ? src.thumbnail : src.image}
+                src={isGridView ? src.thumbnail_md : src.thumbnail_lg}
                 alt={`Thumbnail ${index + 1}`}
                 className={`w-full h-auto ${isGridView ? 'aspect-square' : 'max-w-[300px] mx-auto'} object-cover cursor-pointer`}
-                onClick={() => setSelectedImage(isGridView ? src.thumbnail : src.image)}
+                onClick={() => setSelectedImage(isGridView ? src.file_path : src.file_path)}
               />
             ))}
           </div>
+          {hasMore && (
+            <Button
+              variant="secondary"
+              className="mt-4"
+              onClick={loadMoreMedia}
+            >
+              Load More
+            </Button>
+          )}
         </div>
         <MediaModal
-          media={media}
+          media={media.map((item) => ({ thumbnail: item.thumbnail_md, image: item.thumbnail_lg }))}
           selectedImage={selectedImage}
           setSelectedImage={setSelectedImage}
           isPhoneScreen={isPhoneScreen}
