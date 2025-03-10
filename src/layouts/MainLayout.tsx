@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { Outlet } from "react-router-dom";
-import Header from "../components/Header";
-import Sidebar from "../components/Sidebar";
-import MobileFooter from "../components/MobileFooter";
+import Header from "./Header";
+import Sidebar from "./Sidebar";
+import MobileFooter from "./MobileFooter";
 import useMediaQuery from "../hooks/useMediaQuery";
 
 const MainLayout = () => {
@@ -18,8 +18,8 @@ const MainLayout = () => {
       <Header toggleSidebar={toggleSidebar} />
       <div className="flex flex-grow relative">
         <Sidebar isOpen={isSidebarOpen && !isPhoneScreen} />
-        <div className={`flex flex-col items-center justify-center p-4 transition-all duration-300 flex-grow ${isSidebarOpen && !isPhoneScreen ? 'ml-64' : 'ml-0'} ${isPhoneScreen ? 'h-[calc(100vh-9rem)]' : ''}`}>
-          <div className="w-full p-6 bg-white dark:bg-gray-800 shadow-md rounded-lg">
+        <div className={`flex flex-col items-cente transition-all duration-300 flex-grow ${isSidebarOpen && !isPhoneScreen ? 'ml-64' : 'ml-0'} ${isPhoneScreen ? 'h-[calc(100vh-9rem)]' : ''}`}>
+          <div className="w-full p-6 bg-white dark:bg-gray-800 shadow-md rounded-lg text-sm">
             <Outlet context={{ isPhoneScreen }} />
           </div>
         </div>

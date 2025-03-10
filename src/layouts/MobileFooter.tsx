@@ -1,6 +1,6 @@
 import { Link, useLocation } from "react-router-dom";
 import { Home, Library, ListMusic } from "lucide-react";
-import ThemeSwitch from "./ThemeSwitch";
+import ThemeSwitch from "../components/ThemeSwitch";
 
 const MobileFooter = () => {
   const location = useLocation();

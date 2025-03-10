@@ -1,6 +1,6 @@
 import { Link, useLocation } from "react-router-dom";
-import ThemeSwitch from "./ThemeSwitch";
-import { Home, Library, ListMusic } from "lucide-react";
+import ThemeSwitch from "../components/ThemeSwitch";
+import { Home, Library, ListMusic, User } from "lucide-react"; // Import the profile icon from Lucide
 
 interface SidebarProps {
   isOpen: boolean;
@@ -8,6 +8,7 @@ interface SidebarProps {
 
 const Sidebar = ({ isOpen }: SidebarProps) => {
   const location = useLocation();
+  const profileLink = import.meta.env.VITE_PROFILE_LINK;
 
   return (
     <div className={`fixed inset-y-0 left-0 transform ${isOpen ? "translate-x-0" : "-translate-x-full"} transition-transform duration-300 ease-in-out bg-white dark:bg-gray-800 shadow-md w-64 md:block`} style={{ zIndex: 10 }}>
@@ -44,7 +45,13 @@ const Sidebar = ({ isOpen }: SidebarProps) => {
           </ul>
         </nav>
       </div>
-      <div className="absolute bottom-4 left-4">
+      <div className="absolute bottom-4 flex items-center gap-2 w-full px-6 place-content-end">
+        <div
+          className="p-2 rounded-full bg-gray-200 dark:bg-gray-700 cursor-pointer hover:bg-gray-300 dark:hover:bg-gray-600"
+          onClick={() => window.location.href = profileLink || "/default-profile"}
+        >
+          <User size={24} className="text-gray-900 dark:text-gray-100" />
+        </div>
         <ThemeSwitch />
       </div>
     </div>
