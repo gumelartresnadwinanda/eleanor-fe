@@ -48,8 +48,8 @@ const AllMediaPage = () => {
                 key={index}
                 src={isGridView ? src.thumbnail_md : src.thumbnail_lg}
                 alt={`Thumbnail ${index + 1}`}
-                className={`w-full h-auto ${isGridView ? 'aspect-square' : 'max-w-[300px] mx-auto'} object-cover cursor-pointer`}
-                onClick={() => setSelectedImage(isGridView ? src.file_path : src.file_path)}
+                className={`w-full h-auto ${isGridView ? 'aspect-square' : 'max-w-[400px] mx-auto'} object-cover cursor-pointer`}
+                onClick={() => setSelectedImage(src.thumbnail_lg)}
               />
             ))}
           </div>
