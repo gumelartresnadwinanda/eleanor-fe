@@ -1,5 +1,5 @@
 import { useEffect, useCallback, useState } from "react";
-import { ChevronLeft, ChevronRight, Tag } from "lucide-react";
+import { ChevronLeft, ChevronRight, Tag, X } from "lucide-react";
 import { Button } from "./Button";
 import { Media } from "../types/MediaResponse";
 import { useNavigate } from "react-router-dom";
@@ -41,7 +41,7 @@ const MediaModal = ({ media, selectedMedia, setSelectedMedia, isPhoneScreen }: M
   }, [selectedMedia, media, setSelectedMedia]);
 
   const handleTagClick = (tag: string) => {
-    navigate(`/tags/${tag}`);
+    navigate(`/tags/${tag}/group`);
   };
 
   useEffect(() => {
@@ -60,7 +60,7 @@ const MediaModal = ({ media, selectedMedia, setSelectedMedia, isPhoneScreen }: M
       const swipeDistanceY = touch.clientY - startY;
       if (swipeDistanceX > 50) handlePrevMedia();
       if (swipeDistanceX < -50) handleNextMedia();
-      if (swipeDistanceY > 50) setSelectedMedia(null);
+      if (swipeDistanceY < -50) setSelectedMedia(null); // Enable close modal on swipe up
       startX = null;
       startY = null;
     };
@@ -78,7 +78,7 @@ const MediaModal = ({ media, selectedMedia, setSelectedMedia, isPhoneScreen }: M
 
   return (
     selectedMedia && (
-      <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50" onClick={() => setSelectedMedia(null)}>
+      <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
         {!isPhoneScreen && (
           <Button
             variant="secondary"
@@ -146,6 +146,16 @@ const MediaModal = ({ media, selectedMedia, setSelectedMedia, isPhoneScreen }: M
               {tag.trim()}
             </span>
           ))}
+          <Button
+            variant="secondary"
+            className="p-2"
+            onClick={(e) => {
+              e.stopPropagation();
+              setSelectedMedia(null);
+            }}
+          >
+            <X size={24} />
+          </Button>
         </div>
       </div>
     )
