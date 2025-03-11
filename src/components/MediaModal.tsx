@@ -1,4 +1,4 @@
-import { useEffect, useCallback } from "react";
+import { useEffect, useCallback, useState } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { Button } from "./Button";
 
@@ -10,11 +10,17 @@ interface MediaModalProps {
 }
 
 const MediaModal = ({ media, selectedImage, setSelectedImage, isPhoneScreen }: MediaModalProps) => {
+  const [animationClass, setAnimationClass] = useState("");
+
   const handleNextImage = useCallback(() => {
     if (selectedImage) {
       const currentIndex = media.findIndex((item) => item.image === selectedImage);
       const nextIndex = (currentIndex + 1) % media.length;
-      setSelectedImage(media[nextIndex].image);
+      setAnimationClass("slide-out-left");
+      setTimeout(() => {
+        setSelectedImage(media[nextIndex].image);
+        setAnimationClass("slide-in-right");
+      }, 300);
     }
   }, [selectedImage, media, setSelectedImage]);
 
@@ -22,7 +28,11 @@ const MediaModal = ({ media, selectedImage, setSelectedImage, isPhoneScreen }: M
     if (selectedImage) {
       const currentIndex = media.findIndex((item) => item.image === selectedImage);
       const prevIndex = (currentIndex - 1 + media.length) % media.length;
-      setSelectedImage(media[prevIndex].image);
+      setAnimationClass("slide-out-right");
+      setTimeout(() => {
+        setSelectedImage(media[prevIndex].image);
+        setAnimationClass("slide-in-left");
+      }, 300);
     }
   }, [selectedImage, media, setSelectedImage]);
 
@@ -73,7 +83,13 @@ const MediaModal = ({ media, selectedImage, setSelectedImage, isPhoneScreen }: M
             <ChevronLeft size={24} />
           </Button>
         )}
-        <img src={selectedImage} alt="Full size" className="max-w-full max-h-full" onClick={(e) => e.stopPropagation()} />
+        <img
+          src={selectedImage}
+          alt="Full size"
+          className={`max-w-full max-h-full ${animationClass}`}
+          onClick={(e) => e.stopPropagation()}
+          onAnimationEnd={() => setAnimationClass("")}
+        />
         {!isPhoneScreen && (
           <Button
             variant="secondary"

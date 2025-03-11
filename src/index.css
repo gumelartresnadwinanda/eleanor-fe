@@ -32,3 +32,56 @@ body {
   box-shadow: 0 -4px 6px -1px rgba(0, 0, 0, 0.1),
     0 -2px 4px -1px rgba(0, 0, 0, 0.06);
 }
+
+/* Swipe animations */
+@keyframes slide-in-left {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+@keyframes slide-out-left {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-100%);
+  }
+}
+
+@keyframes slide-in-right {
+  from {
+    transform: translateX(100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+@keyframes slide-out-right {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(100%);
+  }
+}
+
+.slide-in-left {
+  animation: slide-in-left 0.3s forwards;
+}
+
+.slide-out-left {
+  animation: slide-out-left 0.3s forwards;
+}
+
+.slide-in-right {
+  animation: slide-in-right 0.3s forwards;
+}
+
+.slide-out-right {
+  animation: slide-out-right 0.3s forwards;
+}
