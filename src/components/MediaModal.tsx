@@ -1,7 +1,8 @@
 import { useEffect, useCallback, useState } from "react";
-import { ChevronLeft, ChevronRight, Tag } from "lucide-react"; // Import Tag icon
+import { ChevronLeft, ChevronRight, Tag } from "lucide-react";
 import { Button } from "./Button";
 import { Media } from "../types/MediaResponse";
+import { useNavigate } from "react-router-dom";
 
 interface MediaModalProps {
   media: Media[];
@@ -13,6 +14,7 @@ interface MediaModalProps {
 const MediaModal = ({ media, selectedMedia, setSelectedMedia, isPhoneScreen }: MediaModalProps) => {
   const [animationClass, setAnimationClass] = useState("");
   const [showTags, setShowTags] = useState(false);
+  const navigate = useNavigate();
 
   const handleNextMedia = useCallback(() => {
     if (selectedMedia) {
@@ -39,7 +41,7 @@ const MediaModal = ({ media, selectedMedia, setSelectedMedia, isPhoneScreen }: M
   }, [selectedMedia, media, setSelectedMedia]);
 
   const handleTagClick = (tag: string) => {
-    console.log(`Tag clicked: ${tag}`);
+    navigate(`/tags/${tag}`);
   };
 
   useEffect(() => {
@@ -89,7 +91,7 @@ const MediaModal = ({ media, selectedMedia, setSelectedMedia, isPhoneScreen }: M
             <ChevronLeft size={24} />
           </Button>
         )}
-        {selectedMedia.file_type === "image" ? (
+        {selectedMedia.file_type === "photo" ? (
           <img
             src={selectedMedia.file_path}
             alt="Full size"

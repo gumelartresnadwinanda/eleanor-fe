@@ -1,10 +1,55 @@
 import { Link, useLocation } from "react-router-dom";
 import ThemeSwitch from "../components/ThemeSwitch";
-import { Home, Library, ListMusic, User } from "lucide-react"; // Import the profile icon from Lucide
+import { Home, Library, ListMusic, User, Tag, House, Video, Image, Gamepad2 } from "lucide-react"; // Import Video and Image icons
 
 interface SidebarProps {
   isOpen: boolean;
 }
+
+const navItems = [
+  {
+    to: "/",
+    icon: Home,
+    label: "Home",
+  },
+  {
+    to: "/all-media",
+    icon: Library,
+    label: "All Media",
+    subItems: [
+      {
+        to: "/tags",
+        icon: Tag,
+        label: "Tags",
+      },
+      {
+        to: "/tags/lrtrsprn_/group",
+        icon: House,
+        label: "lrtrsprn_",
+      },
+      {
+        to: "/tags/negi",
+        icon: Gamepad2,
+        label: "negi",
+      },
+      {
+        to: "/file-type/video",
+        icon: Video,
+        label: "Videos",
+      },
+      {
+        to: "/file-type/photo",
+        icon: Image,
+        label: "Images",
+      },
+    ],
+  },
+  {
+    to: "/playlists",
+    icon: ListMusic,
+    label: "Playlists",
+  },
+];
 
 const Sidebar = ({ isOpen }: SidebarProps) => {
   const location = useLocation();
@@ -15,33 +60,32 @@ const Sidebar = ({ isOpen }: SidebarProps) => {
       <div className="p-4 mt-16 pt-4">
         <nav className="mt-8">
           <ul className="space-y-4">
-            <li>
-              <Link
-                to="/"
-                className={`flex items-center px-4 py-2 rounded-md text-gray-900 dark:text-gray-100 hover:underline ${location.pathname === "/" ? "bg-gray-200 dark:bg-gray-700" : ""}`}
-              >
-                <Home className="mr-2 w-6 h-6" />
-                Home
-              </Link>
-            </li>
-            <li>
-              <Link
-                to="/all-media"
-                className={`flex items-center px-4 py-2 rounded-md text-gray-900 dark:text-gray-100 hover:underline ${location.pathname === "/all-media" ? "bg-gray-200 dark:bg-gray-700" : ""}`}
-              >
-                <Library className="mr-2 w-6 h-6" />
-                All Media
-              </Link>
-            </li>
-            <li>
-              <Link
-                to="/playlists"
-                className={`flex items-center px-4 py-2 rounded-md text-gray-900 dark:text-gray-100 hover:underline ${location.pathname === "/playlists" ? "bg-gray-200 dark:bg-gray-700" : ""}`}
-              >
-                <ListMusic className="mr-2 w-6 h-6" />
-                Playlists
-              </Link>
-            </li>
+            {navItems.map((item) => (
+              <li key={item.to}>
+                <Link
+                  to={item.to}
+                  className={`flex items-center px-4 py-2 rounded-md text-gray-900 dark:text-gray-100 hover:underline ${location.pathname === item.to ? "bg-gray-200 dark:bg-gray-700" : ""}`}
+                >
+                  <item.icon className="mr-2 w-6 h-6" />
+                  {item.label}
+                </Link>
+                {item.subItems && (
+                  <ul className="pl-8 mt-2 space-y-2">
+                    {item.subItems.map((subItem) => (
+                      <li key={subItem.to}>
+                        <Link
+                          to={subItem.to}
+                          className={`flex items-center px-2 py-1 rounded-md text-gray-900 dark:text-gray-100 hover:underline ${location.pathname === subItem.to ? "bg-gray-200 dark:bg-gray-700" : ""}`}
+                        >
+                          <subItem.icon className="mr-2 w-6 h-6" />
+                          <span className="text-md">{subItem.label}</span>
+                        </Link>
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </li>
+            ))}
           </ul>
         </nav>
       </div>

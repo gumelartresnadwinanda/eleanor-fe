@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useOutletContext } from "react-router-dom";
+import { useOutletContext, useParams } from "react-router-dom";
 import axios from "axios";
 import { Grid, List } from "lucide-react";
 import { Button } from "../components/Button";
@@ -13,8 +13,9 @@ import Container from "../components/Container";
 import Popup from "../components/Popup";
 import EmptyMedia from "../components/EmptyMedia";
 
-const AllMediaPage = () => {
+const FileTypePage = () => {
   const { isPhoneScreen } = useOutletContext<{ isPhoneScreen: boolean }>();
+  const { fileType } = useParams<{ fileType: string }>();
   const [selectedMedia, setSelectedMedia] = useState<Media | null>(null);
   const [isGridView, setIsGridView] = useState(true);
   const [media, setMedia] = useState<Media[]>([]);
@@ -26,9 +27,9 @@ const AllMediaPage = () => {
   useEffect(() => {
     const fetchMedia = async (page: number) => {
       try {
-        const response = await axios.get<MediaResponse>(`${import.meta.env.VITE_API_BASE_URL}/medias?page=${page}&limit=${limit}`);
+        const response = await axios.get<MediaResponse>(`${import.meta.env.VITE_API_BASE_URL}/medias?page=${page}&limit=${limit}&file_type=${fileType}`);
         if (page === 1) {
-          setMedia(response.data.data); // Reset media state only when the page changes
+          setMedia(response.data.data);
         } else {
           setMedia((prevMedia) => {
             const newMedia = response.data.data.filter(
@@ -46,7 +47,7 @@ const AllMediaPage = () => {
     };
 
     fetchMedia(page);
-  }, [page, limit]);
+  }, [page, limit, fileType]);
 
   const loadMoreMedia = () => {
     if (hasMore) {
@@ -56,8 +57,8 @@ const AllMediaPage = () => {
 
   return (
     <Container isPhoneScreen={isPhoneScreen}>
-      <Title text="All Media" />
-      <Description text="Here you can browse all your media." />
+      <Title text={`Media by File Type: ${fileType}`} />
+      <Description text={`Here you can browse media filtered by file type (${fileType}).`} />
       {error && <Popup message={error} onClose={() => setError(null)} />}
       {media.length === 0 ? (
         <EmptyMedia message="No media available." />
@@ -93,5 +94,4 @@ const AllMediaPage = () => {
   );
 };
 
-export default AllMediaPage;
-
+export default FileTypePage;
