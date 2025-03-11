@@ -2,7 +2,7 @@ export interface Media {
   id: number;
   title: string;
   file_path: string;
-  file_type: string;
+  file_type: "image" | "video"; // Updated to handle both image and video types
   tags: string;
   duration: number | null;
   created_at: string;

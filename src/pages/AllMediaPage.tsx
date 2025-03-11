@@ -5,23 +5,26 @@ import { Grid, List } from "lucide-react";
 import { Button } from "../components/Button";
 import MediaModal from "../components/MediaModal";
 import { MediaResponse, Media } from "../types/MediaResponse";
-import { PAGINATION_LIMITS } from "../constants/pagination"; // Import the pagination limits
+import { PAGINATION_LIMITS } from "../constants/pagination";
+import MediaGrid from "../components/MediaGrid";
+import Title from "../components/Title";
+import Description from "../components/Description";
+import Container from "../components/Container";
 
 const AllMediaPage = () => {
   const { isPhoneScreen } = useOutletContext<{ isPhoneScreen: boolean }>();
-  const [selectedImage, setSelectedImage] = useState<string | null>(null);
+  const [selectedMedia, setSelectedMedia] = useState<Media | null>(null);
   const [isGridView, setIsGridView] = useState(true);
   const [media, setMedia] = useState<Media[]>([]);
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
 
-  const limit = PAGINATION_LIMITS.low;
+  const limit = PAGINATION_LIMITS.high;
   useEffect(() => {
     const fetchMedia = async (page: number) => {
       try {
         const response = await axios.get<MediaResponse>(`${import.meta.env.VITE_API_BASE_URL}/medias?page=${page}&limit=${limit}`);
         setMedia((prevMedia) => {
-          // Avoid duplicate media items
           const newMedia = response.data.data.filter(
             (newItem) => !prevMedia.some((prevItem) => prevItem.id === newItem.id)
           );
@@ -45,50 +48,36 @@ const AllMediaPage = () => {
   };
 
   return (
-    <div className={`flex flex-col items-center justify-center ${isPhoneScreen ? 'text-center h-[calc(100vh-12rem)]' : 'h-[calc(100vh-8rem)]'}`}>
-      <div className="w-full h-full overflow-y-auto scrollbar-hide relative">
-        <div className="w-full">
-          <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">All Media</h1>
-          <p className="mt-4 text-base text-gray-700 dark:text-gray-300">Here you can browse all your media.</p>
-          <div className={`grid ${isGridView ? 'grid-cols-3 sm:grid-cols-4 md:grid-cols-5' : 'grid-cols-1'} gap-1 mt-4`}>
-            {media.map((src, index) => (
-              <img
-                key={index}
-                src={isGridView ? src.thumbnail_md : src.thumbnail_lg}
-                alt={`Thumbnail ${index + 1}`}
-                className={`w-full h-auto ${isGridView ? 'aspect-square' : 'max-w-[400px] mx-auto'} object-cover cursor-pointer`}
-                onClick={() => setSelectedImage(src.thumbnail_lg)}
-              />
-            ))}
-          </div>
-          {hasMore && (
-            <Button
-              variant="secondary"
-              className="mt-4"
-              onClick={loadMoreMedia}
-            >
-              Load More
-            </Button>
-          )}
-        </div>
-        <MediaModal
-          media={media.map((item) => ({ thumbnail: item.thumbnail_md, image: item.thumbnail_lg }))}
-          selectedImage={selectedImage}
-          setSelectedImage={setSelectedImage}
-          isPhoneScreen={isPhoneScreen}
-        />
+    <Container isPhoneScreen={isPhoneScreen}>
+      <Title text="All Media" />
+      <Description text="Here you can browse all your media." />
+      <MediaGrid media={media} isGridView={isGridView} setSelectedMedia={setSelectedMedia} />
+      {hasMore && (
         <Button
           variant="secondary"
-          className={`fixed z-10 p-3 rounded-full shadow-lg right-6 ${isPhoneScreen ? 'bottom-22' : 'bottom-6'}`}
-          onClick={() => {
-            setIsGridView(!isGridView);
-            document.querySelector('.overflow-y-auto')?.scrollTo(0, 0);
-          }}
+          className="mt-4"
+          onClick={loadMoreMedia}
         >
-          {isGridView ? <List size={24} /> : <Grid size={24} />}
+          Load More
         </Button>
-      </div>
-    </div>
+      )}
+      <MediaModal
+        media={media}
+        selectedMedia={selectedMedia}
+        setSelectedMedia={setSelectedMedia}
+        isPhoneScreen={isPhoneScreen}
+      />
+      <Button
+        variant="secondary"
+        className={`fixed z-10 p-3 rounded-full shadow-lg right-6 ${isPhoneScreen ? 'bottom-22' : 'bottom-6'}`}
+        onClick={() => {
+          setIsGridView(!isGridView);
+          document.querySelector('.overflow-y-auto')?.scrollTo(0, 0);
+        }}
+      >
+        {isGridView ? <List size={24} /> : <Grid size={24} />}
+      </Button>
+    </Container>
   );
 };
 
