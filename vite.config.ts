@@ -11,4 +11,7 @@ export default defineConfig({
   server: {
     port: parseInt(process.env.VITE_PORT || "3002"),
   },
+  optimizeDeps: {
+    exclude: ["@tanstack/react-query-devtools"],
+  },
 });

@@ -6,6 +6,7 @@ import Description from "../components/Description";
 import Popup from "../components/Popup";
 import TagList from "../components/TagList";
 import { Tag, TagsResponse } from "../types/TagResponse";
+import { ELEANOR_BASE_URL } from "../config";
 
 const TagIndexPage = () => {
   const [tags, setTags] = useState<Tag[]>([]);
@@ -14,7 +15,7 @@ const TagIndexPage = () => {
   useEffect(() => {
     const fetchTags = async () => {
       try {
-        const response = await axios.get<TagsResponse>(`${import.meta.env.VITE_API_BASE_URL}/tags`);
+        const response = await axios.get<TagsResponse>(`${ELEANOR_BASE_URL}/tags`);
         setTags(response.data.data);
       } catch (error) {
         setError(`Failed to fetch tags. ${error}`);
