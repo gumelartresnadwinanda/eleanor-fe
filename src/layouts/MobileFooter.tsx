@@ -6,7 +6,7 @@ const MobileFooter = () => {
   const location = useLocation();
 
   return (
-    <footer className="fixed bottom-0 left-0 right-0 bg-white dark:bg-gray-800 shadow-md shadow-top p-4 md:hidden">
+    <footer className="fixed bottom-0 left-0 right-0 bg-white dark:bg-gray-800 shadow-md shadow-top p-2 md:hidden">
       <nav className="flex justify-around items-center">
         <Link
           to="/"

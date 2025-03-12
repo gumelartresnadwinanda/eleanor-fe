@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 import { useOutletContext, useParams } from "react-router-dom";
 import axios from "axios";
-import { Grid, List } from "lucide-react";
 import { Button } from "../components/Button";
 import MediaModal from "../components/MediaModal";
 import { MediaResponse, Media } from "../types/MediaResponse";
@@ -12,6 +11,10 @@ import Container from "../components/Container";
 import Popup from "../components/Popup";
 import EmptyMedia from "../components/EmptyMedia";
 import GroupedMediaGrid from "../components/GroupedMediaGrid";
+import ToggleViewButton from "../components/ToggleViewButton";
+import ScrollToTopButton from "../components/ScrollToTopButton";
+import { groupMediaByDate } from "../utils/groupMediaByDate";
+import FileTypeToggleList from "../components/FileTypeToggleList";
 
 const GroupedTagPage = () => {
   const { isPhoneScreen } = useOutletContext<{ isPhoneScreen: boolean }>();
@@ -22,12 +25,15 @@ const GroupedTagPage = () => {
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [activeFileType, setActiveFileType] = useState<string | null>(null); // State for active file type
 
   const limit = PAGINATION_LIMITS.high;
+
   useEffect(() => {
     const fetchMedia = async (page: number) => {
       try {
-        const response = await axios.get<MediaResponse>(`${import.meta.env.VITE_API_BASE_URL}/medias?tags=${tag}&page=${page}&limit=${limit}`);
+        const fileTypeParam = activeFileType ? `&file_type=${activeFileType}` : "";
+        const response = await axios.get<MediaResponse>(`${import.meta.env.VITE_API_BASE_URL}/medias?tags=${tag}&page=${page}&limit=${limit}${fileTypeParam}`);
         if (page === 1) {
           setMedia(response.data.data);
         } else {
@@ -47,7 +53,7 @@ const GroupedTagPage = () => {
     };
 
     fetchMedia(page);
-  }, [page, limit, tag]);
+  }, [page, limit, tag, activeFileType]);
 
   const loadMoreMedia = () => {
     if (hasMore) {
@@ -55,30 +61,18 @@ const GroupedTagPage = () => {
     }
   };
 
-  const groupMediaByDate = (media: Media[]) => {
-    const groupedMedia: { date: string; media: Media[] }[] = [];
-    media.forEach((item) => {
-      const date = new Date(item.created_at).toLocaleDateString('en-GB', {
-        day: '2-digit',
-        month: 'short',
-        year: 'numeric',
-      });
-      const group = groupedMedia.find((g) => g.date === date);
-      if (group) {
-        group.media.push(item);
-      } else {
-        groupedMedia.push({ date, media: [item] });
-      }
-    });
-    return groupedMedia;
+  const toggleFileType = (fileType: string) => {
+    setActiveFileType((prevFileType) => (prevFileType === fileType ? null : fileType));
+    setPage(1); // Reset page to 1 when file type changes
   };
 
   const groupedMedia = groupMediaByDate(media);
 
   return (
-    <Container isPhoneScreen={isPhoneScreen}>
+    <Container>
       <Title text={`Media tagged with "${tag}"`} withBack />
       <Description text={`Here you can browse all media tagged with "${tag}".`} />
+      <FileTypeToggleList activeFileType={activeFileType} onFileTypeClick={toggleFileType} /> {/* Add FileTypeToggleList component */}
       {error && <Popup message={error} onClose={() => setError(null)} />}
       {media.length === 0 ? (
         <EmptyMedia message="No media available for this tag." />
@@ -100,16 +94,12 @@ const GroupedTagPage = () => {
         setSelectedMedia={setSelectedMedia}
         isPhoneScreen={isPhoneScreen}
       />
-      <Button
-        variant="secondary"
-        className={`fixed z-10 p-3 rounded-full shadow-lg right-6 ${isPhoneScreen ? 'bottom-22' : 'bottom-6'}`}
-        onClick={() => {
-          setIsGridView(!isGridView);
-          document.querySelector('.overflow-y-auto')?.scrollTo(0, 0);
-        }}
-      >
-        {isGridView ? <List size={24} /> : <Grid size={24} />}
-      </Button>
+      <ScrollToTopButton isPhoneScreen={isPhoneScreen} />
+      <ToggleViewButton
+        isGridView={isGridView}
+        isPhoneScreen={isPhoneScreen}
+        onToggle={() => setIsGridView(!isGridView)}
+      />
     </Container>
   );
 };

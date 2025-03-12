@@ -1,5 +1,5 @@
 import { useEffect, useCallback, useState } from "react";
-import { ChevronLeft, ChevronRight, Tag, X } from "lucide-react";
+import { ChevronLeft, ChevronRight, Tag, X, Info } from "lucide-react";
 import { Button } from "./Button";
 import { Media } from "../types/MediaResponse";
 import { useNavigate } from "react-router-dom";
@@ -14,6 +14,8 @@ interface MediaModalProps {
 const MediaModal = ({ media, selectedMedia, setSelectedMedia, isPhoneScreen }: MediaModalProps) => {
   const [animationClass, setAnimationClass] = useState("");
   const [showTags, setShowTags] = useState(false);
+  const [showInfo, setShowInfo] = useState(false);
+  const [isZooming, setIsZooming] = useState(false);
   const navigate = useNavigate();
 
   const handleNextMedia = useCallback(() => {
@@ -41,6 +43,7 @@ const MediaModal = ({ media, selectedMedia, setSelectedMedia, isPhoneScreen }: M
   }, [selectedMedia, media, setSelectedMedia]);
 
   const handleTagClick = (tag: string) => {
+    setSelectedMedia(null)
     navigate(`/tags/${tag}/group`);
   };
 
@@ -49,48 +52,51 @@ const MediaModal = ({ media, selectedMedia, setSelectedMedia, isPhoneScreen }: M
     let startY: number | null = null;
 
     const handleTouchStart = (e: TouchEvent) => {
-      startX = e.touches[0].clientX;
-      startY = e.touches[0].clientY;
+      if (e.touches.length > 1) {
+        setIsZooming(true);
+      } else {
+        startX = e.touches[0].clientX;
+        startY = e.touches[0].clientY;
+      }
+    };
+
+    const handleTouchMove = (e: TouchEvent) => {
+      if (e.touches.length > 1) {
+        setIsZooming(true);
+      }
     };
 
     const handleTouchEnd = (e: TouchEvent) => {
-      if (!selectedMedia || startX === null || startY === null) return;
+      if (e.touches.length === 0) {
+        setIsZooming(false);
+      }
+      if (!selectedMedia || startX === null || startY === null || isZooming) return;
       const touch = e.changedTouches[0];
       const swipeDistanceX = touch.clientX - startX;
       const swipeDistanceY = touch.clientY - startY;
-      if (swipeDistanceX > 50) handlePrevMedia();
-      if (swipeDistanceX < -50) handleNextMedia();
-      if (swipeDistanceY < -50) setSelectedMedia(null); // Enable close modal on swipe up
+      if (swipeDistanceX > 120) handlePrevMedia();
+      if (swipeDistanceX < -120) handleNextMedia();
+      if (swipeDistanceY < -120) setSelectedMedia(null); // Enable close modal on swipe up
       startX = null;
       startY = null;
     };
 
     if (selectedMedia) {
       document.addEventListener("touchstart", handleTouchStart);
+      document.addEventListener("touchmove", handleTouchMove);
       document.addEventListener("touchend", handleTouchEnd);
     }
 
     return () => {
       document.removeEventListener("touchstart", handleTouchStart);
+      document.removeEventListener("touchmove", handleTouchMove);
       document.removeEventListener("touchend", handleTouchEnd);
     };
-  }, [selectedMedia, handleNextMedia, handlePrevMedia, setSelectedMedia]);
+  }, [selectedMedia, handleNextMedia, handlePrevMedia, setSelectedMedia, isZooming]);
 
   return (
     selectedMedia && (
       <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-        {!isPhoneScreen && (
-          <Button
-            variant="secondary"
-            className="absolute left-6"
-            onClick={(e) => {
-              e.stopPropagation();
-              handlePrevMedia();
-            }}
-          >
-            <ChevronLeft size={24} />
-          </Button>
-        )}
         {selectedMedia.file_type === "photo" ? (
           <img
             src={selectedMedia.file_path}
@@ -112,6 +118,18 @@ const MediaModal = ({ media, selectedMedia, setSelectedMedia, isPhoneScreen }: M
         {!isPhoneScreen && (
           <Button
             variant="secondary"
+            className="absolute left-6"
+            onClick={(e) => {
+              e.stopPropagation();
+              handlePrevMedia();
+            }}
+          >
+            <ChevronLeft size={24} />
+          </Button>
+        )}
+        {!isPhoneScreen && (
+          <Button
+            variant="secondary"
             className="absolute right-6"
             onClick={(e) => {
               e.stopPropagation();
@@ -122,6 +140,18 @@ const MediaModal = ({ media, selectedMedia, setSelectedMedia, isPhoneScreen }: M
           </Button>
         )}
         <div className="absolute top-6 right-6 flex flex-wrap gap-2">
+          {showTags && selectedMedia.tags.split(',').map((tag, index) => (
+            <span
+              key={index}
+              className="bg-blue-500 text-white px-4 py-1 rounded-md cursor-pointer content-center text-sm "
+              onClick={(e) => {
+                e.stopPropagation();
+                handleTagClick(tag.trim());
+              }}
+            >
+              {tag.trim()}
+            </span>
+          ))}
           {selectedMedia.tags && (
             <Button
               variant="secondary"
@@ -134,18 +164,24 @@ const MediaModal = ({ media, selectedMedia, setSelectedMedia, isPhoneScreen }: M
               <Tag size={24} />
             </Button>
           )}
-          {showTags && selectedMedia.tags.split(',').map((tag, index) => (
-            <span
-              key={index}
-              className="bg-blue-500 text-white px-2 py-1 rounded-md cursor-pointer content-center"
-              onClick={(e) => {
-                e.stopPropagation();
-                handleTagClick(tag.trim());
-              }}
-            >
-              {tag.trim()}
-            </span>
-          ))}
+
+          {showInfo && (
+            <div className="bg-white text-black p-2 rounded-md">
+              <p><strong>Title:</strong> {selectedMedia.title}</p>
+              <p><strong>Created At:</strong> {new Date(selectedMedia.created_at).toLocaleString()}</p>
+            </div>
+          )}
+          <Button
+            variant="secondary"
+            className="p-2"
+            onClick={(e) => {
+              e.stopPropagation();
+              setShowInfo(!showInfo);
+            }}
+          >
+            <Info size={24} />
+          </Button>
+
           <Button
             variant="secondary"
             className="p-2"

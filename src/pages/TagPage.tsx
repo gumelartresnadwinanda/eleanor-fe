@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 import { useOutletContext, useParams } from "react-router-dom";
 import axios from "axios";
-import { Grid, List } from "lucide-react";
 import { Button } from "../components/Button";
 import MediaModal from "../components/MediaModal";
 import { MediaResponse, Media } from "../types/MediaResponse";
@@ -11,7 +10,9 @@ import Title from "../components/Title";
 import Description from "../components/Description";
 import Container from "../components/Container";
 import Popup from "../components/Popup";
-import EmptyMedia from "../components/EmptyMedia"; // Import EmptyMedia component
+import EmptyMedia from "../components/EmptyMedia";
+import ToggleViewButton from "../components/ToggleViewButton";
+import ScrollToTopButton from "../components/ScrollToTopButton";
 
 const TagPage = () => {
   const { isPhoneScreen } = useOutletContext<{ isPhoneScreen: boolean }>();
@@ -56,7 +57,7 @@ const TagPage = () => {
   };
 
   return (
-    <Container isPhoneScreen={isPhoneScreen}>
+    <Container>
       <Title text={`Media tagged with "${tag}"`} withBack />
       <Description text={`Here you can browse all media tagged with "${tag}".`} />
       {error && <Popup message={error} onClose={() => setError(null)} />}
@@ -80,16 +81,12 @@ const TagPage = () => {
         setSelectedMedia={setSelectedMedia}
         isPhoneScreen={isPhoneScreen}
       />
-      <Button
-        variant="secondary"
-        className={`fixed z-10 p-3 rounded-full shadow-lg right-6 ${isPhoneScreen ? 'bottom-22' : 'bottom-6'}`}
-        onClick={() => {
-          setIsGridView(!isGridView);
-          document.querySelector('.overflow-y-auto')?.scrollTo(0, 0);
-        }}
-      >
-        {isGridView ? <List size={24} /> : <Grid size={24} />}
-      </Button>
+      <ScrollToTopButton isPhoneScreen={isPhoneScreen} />
+      <ToggleViewButton
+        isGridView={isGridView}
+        isPhoneScreen={isPhoneScreen}
+        onToggle={() => setIsGridView(!isGridView)}
+      />
     </Container>
   );
 };

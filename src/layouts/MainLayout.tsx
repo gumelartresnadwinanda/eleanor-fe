@@ -18,8 +18,8 @@ const MainLayout = () => {
       <Header toggleSidebar={toggleSidebar} />
       <div className="flex flex-grow relative">
         <Sidebar isOpen={isSidebarOpen && !isPhoneScreen} />
-        <div className={`flex flex-col items-cente transition-all duration-300 flex-grow ${isSidebarOpen && !isPhoneScreen ? 'ml-64' : 'ml-0'} ${isPhoneScreen ? 'h-[calc(100vh-9rem)]' : ''}`}>
-          <div className="w-full p-6 bg-white dark:bg-gray-800 shadow-md rounded-lg text-sm">
+        <div className={`flex flex-col items-center transition-all duration-300 flex-grow ${isSidebarOpen && !isPhoneScreen ? 'ml-56' : 'ml-0'} `}>
+          <div className="w-full min-h-full px-2 py-22 md:pb-4 md:px-4 bg-white dark:bg-gray-800 shadow-md text-sm">
             <Outlet context={{ isPhoneScreen }} />
           </div>
         </div>
