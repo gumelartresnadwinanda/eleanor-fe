@@ -37,7 +37,9 @@ function AllMediaPage() {
   useEffect(() => {
     const fetchTags = async () => {
       try {
-        const response = await axios.get<{ data: Tag[]; }>(`${ELEANOR_BASE_URL}/tags`);
+        const response = await axios.get<{ data: Tag[]; }>(`${ELEANOR_BASE_URL}/tags`,
+          { withCredentials: true }
+        );
         setTags(response.data.data);
       } catch (error) {
         setError(`Failed to fetch tags. ${error}`);
@@ -55,17 +57,19 @@ function AllMediaPage() {
             page,
             limit,
             tags: activeTags.length > 0 ? activeTags.join(",") : undefined,
-          })}`
+          })}`,
+          { withCredentials: true }
         );
-        setMedia((prevMedia) => {
-          if (page === 1) {
-            return response.data.data;
-          }
-          const newMedia = response.data.data.filter(
-            (newItem) => !prevMedia.some((prevItem) => prevItem.id === newItem.id)
-          );
-          return [...prevMedia, ...newMedia];
-        });
+        if (page === 1) {
+          setMedia(response.data.data);
+        } else {
+          setMedia((prevMedia) => {
+            const newMedia = response.data.data.filter(
+              (newItem) => !prevMedia.some((prevItem) => prevItem.id === newItem.id)
+            );
+            return [...prevMedia, ...newMedia];
+          });
+        }
         setHasMore(response.data.data.length >= limit);
       } catch (error) {
         setError(`Failed to fetch media. ${error}`);

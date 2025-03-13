@@ -53,7 +53,7 @@ const navItems = [
 
 const Sidebar = ({ isOpen }: SidebarProps) => {
   const location = useLocation();
-  const profileLink = import.meta.env.VITE_PROFILE_LINK;
+  const profileLink = import.meta.env.VITE_ADAM_AUTH_URL + '/login?redirect=' + window.location.href;
 
   return (
     <div className={`fixed inset-y-0 left-0 transform ${isOpen ? "translate-x-0" : "-translate-x-full"} transition-transform duration-300 ease-in-out bg-white dark:bg-gray-800 shadow-md w-56 md:block`} style={{ zIndex: 10 }}>

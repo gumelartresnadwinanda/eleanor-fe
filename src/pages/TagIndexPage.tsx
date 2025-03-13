@@ -7,6 +7,7 @@ import Popup from "../components/Popup";
 import TagList from "../components/TagList";
 import { Tag, TagsResponse } from "../types/TagResponse";
 import { ELEANOR_BASE_URL } from "../config";
+import { serializeParams } from "../utils/serializeParams";
 
 const TagIndexPage = () => {
   const [tags, setTags] = useState<Tag[]>([]);
@@ -15,7 +16,10 @@ const TagIndexPage = () => {
   useEffect(() => {
     const fetchTags = async () => {
       try {
-        const response = await axios.get<TagsResponse>(`${ELEANOR_BASE_URL}/tags`);
+        const response = await axios.get<TagsResponse>(
+          `${ELEANOR_BASE_URL}/tags?${serializeParams({ limit: 100 })}`,
+          { withCredentials: true }
+        );
         setTags(response.data.data);
       } catch (error) {
         setError(`Failed to fetch tags. ${error}`);

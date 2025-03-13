@@ -13,7 +13,7 @@ const TagGroupedPage = lazy(() => import("../pages/GroupedTagPage"));
 const AppRoutes = () => {
   return (
     <Router>
-      <Suspense fallback={<div>Loading...</div>}>
+      <Suspense fallback={<MainLayout />}>
         <Routes>
           {/* Public Routes */}
           <Route element={<MainLayout />}>
