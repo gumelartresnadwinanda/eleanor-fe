@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useOutletContext, useParams } from "react-router-dom";
 import axios from "axios";
 
@@ -30,6 +30,7 @@ const GroupedTagPage = () => {
   const [hasMore, setHasMore] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [activeFileType, setActiveFileType] = useState<string | null>(null);
+  const tagRef = useRef(tag);
 
   const limit = PAGINATION_LIMITS.high;
 
@@ -61,6 +62,11 @@ const GroupedTagPage = () => {
       }
     };
 
+    if (tagRef.current !== tag && page !== 1) {
+      tagRef.current = tag;
+      setPage(1);
+      return;
+    }
     fetchMedia(page);
   }, [page, limit, tag, activeFileType]);
 

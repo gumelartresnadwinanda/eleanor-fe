@@ -10,7 +10,7 @@ import GroupedMediaGrid from "../components/GroupedMediaGrid";
 import MediaModal from "../components/MediaModal";
 import Popup from "../components/Popup";
 import ScrollToTopButton from "../components/ScrollToTopButton";
-import TagToggleList from "../components/TagToggleList";
+import TagList from "../components/TagList";
 import Title from "../components/Title";
 import ToggleViewButton from "../components/ToggleViewButton";
 
@@ -97,7 +97,7 @@ function AllMediaPage() {
     <Container>
       <Title text="All Media" />
       <Description text="Here you can browse all your media." />
-      <TagToggleList tags={tags} activeTags={activeTags} onTagClick={toggleTag} /> {/* Add TagToggleList component */}
+      <TagList tags={tags} activeTags={activeTags} onTagClick={toggleTag} type="toggle" /> {/* Add TagToggleList component */}
       {error && <Popup message={error} onClose={() => setError(null)} />}
       {media.length === 0 ? (
         <EmptyMedia message="No media available." />

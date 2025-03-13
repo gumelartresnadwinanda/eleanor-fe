@@ -1,9 +1,12 @@
 import AppRoutes from "./routes";
-
-// TODO: Handle Authenticated Routes
+import { AuthProvider } from "./contexts/AuthContext";
 
 function App() {
-  return <AppRoutes />;
+  return (
+    <AuthProvider>
+      <AppRoutes />
+    </AuthProvider>
+  );
 }
 
 export default App;

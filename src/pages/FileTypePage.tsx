@@ -1,5 +1,5 @@
 import axios from "axios";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useOutletContext, useParams } from "react-router-dom";
 
 import { Button } from "../components/Button";
@@ -10,7 +10,7 @@ import GroupedMediaGrid from "../components/GroupedMediaGrid";
 import MediaModal from "../components/MediaModal";
 import Popup from "../components/Popup";
 import ScrollToTopButton from "../components/ScrollToTopButton";
-import TagToggleList from "../components/TagToggleList";
+import TagList from "../components/TagList";
 import Title from "../components/Title";
 import ToggleViewButton from "../components/ToggleViewButton";
 
@@ -24,6 +24,7 @@ import { serializeParams } from "../utils/serializeParams";
 const FileTypePage = () => {
   const { isPhoneScreen } = useOutletContext<{ isPhoneScreen: boolean }>();
   const { fileType } = useParams<{ fileType: string }>();
+  const fileTypeRef = useRef(fileType); // Add a ref to track fileType changes
   const [selectedMedia, setSelectedMedia] = useState<Media | null>(null);
   const [isGridView, setIsGridView] = useState(true);
   const [media, setMedia] = useState<Media[]>([]);
@@ -78,6 +79,11 @@ const FileTypePage = () => {
       }
     };
 
+    if (fileTypeRef.current !== fileType && page !== 1) {
+      fileTypeRef.current = fileType;
+      setPage(1);
+      return;
+    }
     fetchMedia(page);
   }, [page, limit, fileType, activeTags]);
 
@@ -100,7 +106,7 @@ const FileTypePage = () => {
     <Container>
       <Title text={`Media by File Type: ${fileType}`} />
       <Description text={`Here you can browse media filtered by file type (${fileType}).`} />
-      <TagToggleList tags={tags} activeTags={activeTags} onTagClick={toggleTag} /> {/* Add TagToggleList component */}
+      <TagList tags={tags} activeTags={activeTags} onTagClick={toggleTag} type="toggle" /> {/* Add TagToggleList component */}
       {error && <Popup message={error} onClose={() => setError(null)} />}
       {media.length === 0 ? (
         <EmptyMedia message="No media available." />
