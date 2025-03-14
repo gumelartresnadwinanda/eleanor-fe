@@ -1,6 +1,6 @@
-import Title from "../components/Title";
-import Description from "../components/Description";
-import Container from "../components/Container";
+import Container from "../components/layout/Container";
+import Description from "../components/layout/Description";
+import Title from "../components/layout/Title";
 
 const LandingPage = () => {
 

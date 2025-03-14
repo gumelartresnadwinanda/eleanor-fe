@@ -1,7 +1,7 @@
 import { ADAM_AUTH_URL } from "../config";
 import useAuth from "../hooks/useAuth";
-import SidebarUserSection from "../components/SidebarUserSection";
-import SidebarNavItems from "../components/SidebarNavItems";
+import SidebarUserSection from "../components/sidebar/SidebarUserSection";
+import SidebarNavItems from "../components/sidebar/SidebarNavItems";
 
 interface SidebarProps {
   isOpen: boolean;

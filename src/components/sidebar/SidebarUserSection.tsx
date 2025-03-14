@@ -1,5 +1,5 @@
 import { User, LogOut } from "lucide-react";
-import ThemeSwitch from "./ThemeSwitch";
+import ThemeSwitch from "../buttons/ThemeSwitch";
 
 interface SidebarUserSectionProps {
   user: { username: string } | null;

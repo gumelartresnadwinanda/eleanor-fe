@@ -1,8 +1,8 @@
 import { useEffect, useCallback, useState } from "react";
-import { Media } from "../types/MediaResponse";
+import { Media } from "../../types/MediaResponse";
 import { useNavigate } from "react-router-dom";
-import MediaModalControls from "./MediaModalControls";
 import MediaNavigationButtons from "./MediaNavigationButtons";
+import MediaModalControls from "./MediaModalControls";
 
 interface MediaModalProps {
   media: Media[];

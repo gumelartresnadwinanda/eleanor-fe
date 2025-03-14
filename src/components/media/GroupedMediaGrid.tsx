@@ -1,4 +1,4 @@
-import { Media } from "../types/MediaResponse";
+import { Media } from "../../types/MediaResponse";
 import MediaGrid from "./MediaGrid";
 
 interface GroupedMediaGridProps {

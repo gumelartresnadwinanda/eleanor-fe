@@ -1,7 +1,7 @@
 import { Link, useLocation } from "react-router-dom";
 import { Home, Library, Tag, User } from "lucide-react";
-import ThemeSwitch from "../components/ThemeSwitch";
 import useAuth from "../hooks/useAuth";
+import ThemeSwitch from "../components/buttons/ThemeSwitch";
 
 const MobileFooter = () => {
   const location = useLocation();

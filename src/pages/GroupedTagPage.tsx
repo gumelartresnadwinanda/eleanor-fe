@@ -2,17 +2,17 @@ import { useState, useEffect, useRef } from "react";
 import { useOutletContext, useParams } from "react-router-dom";
 import axios from "axios";
 
-import { Button } from "../components/Button";
-import Container from "../components/Container";
-import Description from "../components/Description";
-import EmptyMedia from "../components/EmptyMedia";
-import FileTypeToggleList from "../components/FileTypeToggleList";
-import GroupedMediaGrid from "../components/GroupedMediaGrid";
-import MediaModal from "../components/MediaModal";
-import Popup from "../components/Popup";
-import ScrollToTopButton from "../components/ScrollToTopButton";
-import Title from "../components/Title";
-import ToggleViewButton from "../components/ToggleViewButton";
+import { Button } from "../components/buttons/Button";
+import Container from "../components/layout/Container";
+import Description from "../components/layout/Description";
+import EmptyMedia from "../components/media/EmptyMedia";
+import FileTypeToggleList from "../components/utilities/FileTypeToggleList";
+import GroupedMediaGrid from "../components/media/GroupedMediaGrid";
+import MediaModal from "../components/media/MediaModal";
+import Popup from "../components/utilities/Popup";
+import Title from "../components/layout/Title";
+import ScrollToTopButton from "../components/buttons/ScrollToTopButton";
+import ToggleViewButton from "../components/buttons/ToggleViewButton";
 
 import { ELEANOR_BASE_URL } from "../config";
 import { PAGINATION_LIMITS } from "../constants/pagination";

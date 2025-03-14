@@ -1,6 +1,6 @@
-import { Button } from "../components/Button";
 import { LogOut, Menu } from "lucide-react";
 import useAuth from "../hooks/useAuth";
+import { Button } from "../components/buttons/Button";
 
 interface HeaderProps {
   toggleSidebar: () => void;

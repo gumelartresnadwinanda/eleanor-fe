@@ -1,5 +1,5 @@
 import { Play } from "lucide-react";
-import { Media } from "../types/MediaResponse";
+import { Media } from "../../types/MediaResponse";
 import { useNavigate } from "react-router-dom";
 
 interface MediaGridProps {

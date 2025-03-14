@@ -1,6 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { Tag } from "../types/TagResponse";
+import { Tag } from "../../types/TagResponse";
 
 interface TagListProps {
   tags: Tag[];

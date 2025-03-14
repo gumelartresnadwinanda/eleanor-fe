@@ -1,6 +1,6 @@
-import { Button } from "./Button";
 import { Tag, Info, X } from "lucide-react";
-import { Media } from "../types/MediaResponse";
+import { Media } from "../../types/MediaResponse";
+import { Button } from "../buttons/Button";
 
 interface MediaModalControlsProps {
   selectedMedia: Media;

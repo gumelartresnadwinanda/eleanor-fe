@@ -1,12 +1,12 @@
-import { useState, useEffect } from "react";
 import axios from "axios";
-import Container from "../components/Container";
-import Title from "../components/Title";
-import Description from "../components/Description";
-import Popup from "../components/Popup";
-import TagList from "../components/TagList";
-import { Tag, TagsResponse } from "../types/TagResponse";
+import { useState, useEffect } from "react";
+import Container from "../components/layout/Container";
+import Description from "../components/layout/Description";
+import Title from "../components/layout/Title";
+import Popup from "../components/utilities/Popup";
+import TagList from "../components/tags/TagList";
 import { ELEANOR_BASE_URL } from "../config";
+import { Tag, TagsResponse } from "../types/TagResponse";
 import { serializeParams } from "../utils/serializeParams";
 
 const TagIndexPage = () => {
