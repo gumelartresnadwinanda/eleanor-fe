@@ -3,15 +3,14 @@ import { Button } from "./Button";
 
 interface ToggleViewButtonProps {
   isGridView: boolean;
-  isPhoneScreen: boolean;
   onToggle: () => void;
 }
 
-const ToggleViewButton: React.FC<ToggleViewButtonProps> = ({ isGridView, isPhoneScreen, onToggle }) => {
+const ToggleViewButton: React.FC<ToggleViewButtonProps> = ({ isGridView, onToggle }) => {
   return (
     <Button
       variant="secondary"
-      className={`fixed z-10 p-3 rounded-full shadow-lg right-6 ${isPhoneScreen ? 'bottom-20' : 'bottom-6'} shadow-md`}
+      className={`p-3 rounded-full shadow-lg`}
       onClick={() => {
         onToggle();
         document.querySelector('.overflow-y-auto')?.scrollTo(0, 0);

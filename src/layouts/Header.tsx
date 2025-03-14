@@ -17,9 +17,8 @@ const Header = ({ toggleSidebar }: HeaderProps) => {
       <img src="https://upload.wikimedia.org/wikipedia/commons/2/2f/Google_2015_logo.svg" alt="Logo" className="w-12 h-12 mx-4" />
       <div className="p-2 hidden md:block" />
       {
-        user && <Button onClick={toggleSidebar} variant="secondary" className="p-2 block md:hidden">
-          <LogOut onClick={logout} className="w-6 h-6" />
-        </Button>
+        user &&
+        <LogOut onClick={logout} className="w-6 h-6 mx-2 dark:text-gray-100 block md:hidden " />
       }
     </header>
   );

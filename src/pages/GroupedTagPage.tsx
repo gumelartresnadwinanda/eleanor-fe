@@ -7,12 +7,11 @@ import Container from "../components/layout/Container";
 import Description from "../components/layout/Description";
 import EmptyMedia from "../components/media/EmptyMedia";
 import FileTypeToggleList from "../components/utilities/FileTypeToggleList";
+import FloatingButtons from "../components/buttons/FloatingButtons";
 import GroupedMediaGrid from "../components/media/GroupedMediaGrid";
 import MediaModal from "../components/media/MediaModal";
 import Popup from "../components/utilities/Popup";
 import Title from "../components/layout/Title";
-import ScrollToTopButton from "../components/buttons/ScrollToTopButton";
-import ToggleViewButton from "../components/buttons/ToggleViewButton";
 
 import { ELEANOR_BASE_URL } from "../config";
 import { PAGINATION_LIMITS } from "../constants/pagination";
@@ -26,6 +25,7 @@ const GroupedTagPage = () => {
   const [media, setMedia] = useState<Media[]>([]);
   const [selectedMedia, setSelectedMedia] = useState<Media | null>(null);
   const [isGridView, setIsGridView] = useState(true);
+  const [mode, setMode] = useState(localStorage.getItem("mode") || "unprotected");
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -37,12 +37,14 @@ const GroupedTagPage = () => {
   useEffect(() => {
     const fetchMedia = async (page: number) => {
       try {
+        const isProtected = mode === "protected" ? true : mode === "unprotected" ? false : undefined;
         const response = await axios.get<MediaResponse>(
           `${ELEANOR_BASE_URL}/medias?${serializeParams({
             tags: tag,
             page,
             limit,
             file_type: activeFileType,
+            ...(isProtected !== undefined && { is_protected: isProtected }),
           })}`,
           { withCredentials: true }
         );
@@ -68,7 +70,7 @@ const GroupedTagPage = () => {
       return;
     }
     fetchMedia(page);
-  }, [page, limit, tag, activeFileType]);
+  }, [page, limit, tag, activeFileType, mode]);
 
   const loadMoreMedia = () => {
     if (hasMore) {
@@ -109,11 +111,13 @@ const GroupedTagPage = () => {
         setSelectedMedia={setSelectedMedia}
         isPhoneScreen={isPhoneScreen}
       />
-      <ScrollToTopButton isPhoneScreen={isPhoneScreen} />
-      <ToggleViewButton
-        isGridView={isGridView}
+      <FloatingButtons
         isPhoneScreen={isPhoneScreen}
-        onToggle={() => setIsGridView(!isGridView)}
+        isGridView={isGridView}
+        onToggleView={() => setIsGridView(!isGridView)}
+        showScrollToTop
+        showToggleView
+        setMode={setMode}
       />
     </Container>
   );

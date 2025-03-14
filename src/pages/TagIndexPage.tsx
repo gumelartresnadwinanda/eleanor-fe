@@ -8,17 +8,26 @@ import TagList from "../components/tags/TagList";
 import { ELEANOR_BASE_URL } from "../config";
 import { Tag, TagsResponse } from "../types/TagResponse";
 import { serializeParams } from "../utils/serializeParams";
+import FloatingButtons from "../components/buttons/FloatingButtons";
+import { useOutletContext } from "react-router-dom";
 
 const TagIndexPage = () => {
-  const [tags, setTags] = useState<Tag[]>([]);
+  const { isPhoneScreen } = useOutletContext<{ isPhoneScreen: boolean; }>();
   const [error, setError] = useState<string | null>(null);
+  const [mode, setMode] = useState(localStorage.getItem("mode") || "unprotected");
   const [searchTerm, setSearchTerm] = useState<string>("");
+  const [tags, setTags] = useState<Tag[]>([]);
 
   useEffect(() => {
     const fetchTags = async () => {
       try {
+        const isProtected = mode === "protected" ? true : mode === "unprotected" ? false : undefined;
         const response = await axios.get<TagsResponse>(
-          `${ELEANOR_BASE_URL}/tags?${serializeParams({ limit: 100 })}`,
+          `${ELEANOR_BASE_URL}/tags?${serializeParams({
+            limit: 100,
+            ...(isProtected !== undefined && { is_protected: isProtected }),
+
+          })}`,
           { withCredentials: true }
         );
         setTags(response.data.data);
@@ -28,7 +37,7 @@ const TagIndexPage = () => {
     };
 
     fetchTags();
-  }, []);
+  }, [mode]);
 
   const filteredTags = tags.filter(tag =>
     tag.name.toLowerCase().includes(searchTerm.toLowerCase())
@@ -51,6 +60,10 @@ const TagIndexPage = () => {
       ) : (
         <p className="mt-4 dark:text-white">No tags found. Try a different search term.</p>
       )}
+      <FloatingButtons
+        isPhoneScreen={isPhoneScreen}
+        setMode={setMode}
+      />
     </Container>
   );
 };

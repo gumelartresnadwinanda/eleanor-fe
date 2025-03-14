@@ -6,13 +6,12 @@ import { Button } from "../components/buttons/Button";
 import Container from "../components/layout/Container";
 import Description from "../components/layout/Description";
 import EmptyMedia from "../components/media/EmptyMedia";
+import FloatingButtons from "../components/buttons/FloatingButtons";
 import GroupedMediaGrid from "../components/media/GroupedMediaGrid";
 import MediaModal from "../components/media/MediaModal";
 import Popup from "../components/utilities/Popup";
 import Title from "../components/layout/Title";
 import TagList from "../components/tags/TagList";
-import ScrollToTopButton from "../components/buttons/ScrollToTopButton";
-import ToggleViewButton from "../components/buttons/ToggleViewButton";
 
 import { ELEANOR_BASE_URL } from "../config";
 import { PAGINATION_LIMITS } from "../constants/pagination";
@@ -27,6 +26,7 @@ const FileTypePage = () => {
   const fileTypeRef = useRef(fileType); // Add a ref to track fileType changes
   const [selectedMedia, setSelectedMedia] = useState<Media | null>(null);
   const [isGridView, setIsGridView] = useState(true);
+  const [mode, setMode] = useState(localStorage.getItem("mode") || "unprotected");
   const [media, setMedia] = useState<Media[]>([]);
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
@@ -54,12 +54,14 @@ const FileTypePage = () => {
   useEffect(() => {
     const fetchMedia = async (page: number) => {
       try {
+        const isProtected = mode === "protected" ? true : mode === "unprotected" ? false : undefined;
         const response = await axios.get<MediaResponse>(
           `${ELEANOR_BASE_URL}/medias?${serializeParams({
             page,
             limit,
             file_type: fileType,
             tags: activeTags.length > 0 ? activeTags.join(",") : undefined,
+            ...(isProtected !== undefined && { is_protected: isProtected }),
           })}`,
           { withCredentials: true }
         );
@@ -85,7 +87,7 @@ const FileTypePage = () => {
       return;
     }
     fetchMedia(page);
-  }, [page, limit, fileType, activeTags]);
+  }, [page, limit, fileType, activeTags, mode]);
 
   const loadMoreMedia = () => {
     if (hasMore) {
@@ -128,11 +130,13 @@ const FileTypePage = () => {
         setSelectedMedia={setSelectedMedia}
         isPhoneScreen={isPhoneScreen}
       />
-      <ScrollToTopButton isPhoneScreen={isPhoneScreen} />
-      <ToggleViewButton
-        isGridView={isGridView}
+      <FloatingButtons
         isPhoneScreen={isPhoneScreen}
-        onToggle={() => setIsGridView(!isGridView)}
+        isGridView={isGridView}
+        onToggleView={() => setIsGridView(!isGridView)}
+        showScrollToTop
+        showToggleView
+        setMode={setMode}
       />
     </Container>
   );

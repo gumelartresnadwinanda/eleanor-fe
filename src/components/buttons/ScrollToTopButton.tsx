@@ -2,11 +2,8 @@ import { useState, useEffect } from "react";
 import { ArrowUp } from "lucide-react";
 import { Button } from "./Button";
 
-interface ScrollToTopButtonProps {
-  isPhoneScreen: boolean;
-}
 
-const ScrollToTopButton: React.FC<ScrollToTopButtonProps> = ({ isPhoneScreen }) => {
+const ScrollToTopButton: React.FC = () => {
   const [isVisible, setIsVisible] = useState(false);
 
   const scrollToTop = () => {
@@ -28,7 +25,7 @@ const ScrollToTopButton: React.FC<ScrollToTopButtonProps> = ({ isPhoneScreen }) 
   return (
     <Button
       variant="secondary"
-      className={`fixed z-10 p-3 rounded-full shadow-lg right-6 transition-opacity duration-300 ${isPhoneScreen ? 'bottom-32' : 'bottom-18'} mb-2 ${isVisible ? 'opacity-100' : 'opacity-0'} shadow-md`}
+      className={`p-3 rounded-full shadow-lg transition-opacity duration-300 ${isVisible ? 'opacity-100' : 'opacity-0'}`}
       onClick={scrollToTop}
     >
       <ArrowUp size={24} />

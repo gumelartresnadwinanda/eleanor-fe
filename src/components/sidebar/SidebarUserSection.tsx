@@ -11,7 +11,7 @@ const SidebarUserSection = ({ user, logout, profileLink }: SidebarUserSectionPro
   return (
     <>
       {user ? (
-        <div className="absolute bottom-4 flex items-end gap-2 w-full px-6 justify-between">
+        <div className="absolute bottom-4 flex items-end gap-2 w-full px-2 justify-between">
           <div className="flex items-center gap-2 py-2">
             <User size={24} className="text-gray-700 dark:text-gray-100" />
             <span className="text-gray-700 dark:text-gray-100 ">
@@ -29,7 +29,7 @@ const SidebarUserSection = ({ user, logout, profileLink }: SidebarUserSectionPro
           </div>
         </div>
       ) : (
-        <div className="absolute bottom-4 flex flex-col items-end gap-2 w-full px-6 place-content-end">
+        <div className="absolute bottom-4 flex flex-col items-end gap-2 w-full px-2 place-content-end">
           <ThemeSwitch />
           <div
             className="p-2 rounded-full bg-gray-200 dark:bg-gray-700 cursor-pointer hover:bg-gray-300 dark:hover:bg-gray-600"
