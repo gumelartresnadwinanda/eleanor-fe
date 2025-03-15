@@ -4,13 +4,14 @@ import { Button } from "./Button";
 interface ToggleViewButtonProps {
   isGridView: boolean;
   onToggle: () => void;
+  className?: string;
 }
 
-const ToggleViewButton: React.FC<ToggleViewButtonProps> = ({ isGridView, onToggle }) => {
+const ToggleViewButton: React.FC<ToggleViewButtonProps> = ({ isGridView, onToggle, className }) => {
   return (
     <Button
       variant="secondary"
-      className={`p-3 rounded-full shadow-lg`}
+      className={`p-3 rounded-full shadow-lg ${className || ''}`}
       onClick={() => {
         onToggle();
         document.querySelector('.overflow-y-auto')?.scrollTo(0, 0);

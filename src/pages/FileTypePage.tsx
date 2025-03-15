@@ -33,6 +33,7 @@ const FileTypePage = () => {
   const [error, setError] = useState<string | null>(null);
   const [activeTags, setActiveTags] = useState<string[]>([]); // State for active tags
   const [tags, setTags] = useState<Tag[]>([]); // State for tags
+  const modeRef = useRef(mode);
 
   const limit = PAGINATION_LIMITS.high;
 
@@ -83,6 +84,11 @@ const FileTypePage = () => {
 
     if (fileTypeRef.current !== fileType && page !== 1) {
       fileTypeRef.current = fileType;
+      setPage(1);
+      return;
+    }
+    if (modeRef.current !== mode && page !== 1) {
+      modeRef.current = mode;
       setPage(1);
       return;
     }

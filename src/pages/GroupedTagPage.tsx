@@ -31,7 +31,7 @@ const GroupedTagPage = () => {
   const [error, setError] = useState<string | null>(null);
   const [activeFileType, setActiveFileType] = useState<string | null>(null);
   const tagRef = useRef(tag);
-
+  const modeRef = useRef(mode);
   const limit = PAGINATION_LIMITS.high;
 
   useEffect(() => {
@@ -66,6 +66,11 @@ const GroupedTagPage = () => {
 
     if (tagRef.current !== tag && page !== 1) {
       tagRef.current = tag;
+      setPage(1);
+      return;
+    }
+    if (modeRef.current !== mode && page !== 1) {
+      modeRef.current = mode;
       setPage(1);
       return;
     }

@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useOutletContext } from "react-router-dom";
 import axios from "axios";
 
@@ -31,6 +31,7 @@ function AllMediaPage() {
   const [error, setError] = useState<string | null>(null);
   const [activeTags, setActiveTags] = useState<string[]>([]);
   const [tags, setTags] = useState<Tag[]>([]);
+  const modeRef = useRef(mode);
 
   const limit = PAGINATION_LIMITS.high;
 
@@ -80,7 +81,11 @@ function AllMediaPage() {
         setError(`Failed to fetch media. ${error}`);
       }
     };
-
+    if (modeRef.current !== mode && page !== 1) {
+      modeRef.current = mode;
+      setPage(1);
+      return;
+    }
     fetchMedia(page);
   }, [page, limit, activeTags, mode]);
 

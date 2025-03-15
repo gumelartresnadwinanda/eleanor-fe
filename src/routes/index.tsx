@@ -5,7 +5,6 @@ const MainLayout = lazy(() => import("../layouts/MainLayout"));
 const LandingPage = lazy(() => import("../pages/LandingPage"));
 const AllMediaPage = lazy(() => import("../pages/AllMediaPage"));
 const PlaylistPage = lazy(() => import("../pages/PlaylistPage"));
-const TagPage = lazy(() => import("../pages/TagPage"));
 const TagIndexPage = lazy(() => import("../pages/TagIndexPage"));
 const FileTypePage = lazy(() => import("../pages/FileTypePage"));
 const TagGroupedPage = lazy(() => import("../pages/GroupedTagPage"));
@@ -21,7 +20,6 @@ const AppRoutes = () => {
             <Route path="/all-media" element={<AllMediaPage />} />
             <Route path="/playlists" element={<PlaylistPage />} />
             <Route path="/tags" element={<TagIndexPage />} />
-            <Route path="/tags/:tag" element={<TagPage />} />
             <Route path="/tags/:tag/group" element={<TagGroupedPage />} />
             <Route path="/file-type/:fileType" element={<FileTypePage />} />
           </Route>

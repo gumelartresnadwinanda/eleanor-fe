@@ -11,9 +11,10 @@ const icons = {
 
 interface ProtectedModeButtonProps {
   setMode?: (mode: keyof typeof icons) => void;
+  className?: string;
 }
 
-const ProtectedModeButton: React.FC<ProtectedModeButtonProps> = ({ setMode }) => {
+const ProtectedModeButton: React.FC<ProtectedModeButtonProps> = ({ setMode, className }) => {
   const [currentMode, setCurrentMode] = useState<keyof typeof icons>(() => {
     const mode = localStorage.getItem("mode");
     return (mode === "protected" || mode === "unprotected" || mode === "all") ? mode : "unprotected";
@@ -34,7 +35,7 @@ const ProtectedModeButton: React.FC<ProtectedModeButtonProps> = ({ setMode }) =>
   return (
     <Button
       variant="secondary"
-      className="p-3 rounded-full shadow-lg"
+      className={`p-3 rounded-full shadow-lg ${className || ''}`}
       onClick={handleClick}
     >
       {icons[currentMode]}

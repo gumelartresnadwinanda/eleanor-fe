@@ -3,7 +3,7 @@ import { ArrowUp } from "lucide-react";
 import { Button } from "./Button";
 
 
-const ScrollToTopButton: React.FC = () => {
+const ScrollToTopButton: React.FC<{ className?: string }> = ({ className }) => {
   const [isVisible, setIsVisible] = useState(false);
 
   const scrollToTop = () => {
@@ -25,7 +25,7 @@ const ScrollToTopButton: React.FC = () => {
   return (
     <Button
       variant="secondary"
-      className={`p-3 rounded-full shadow-lg transition-opacity duration-300 ${isVisible ? 'opacity-100' : 'opacity-0'}`}
+      className={`p-3 rounded-full shadow-lg transition-opacity duration-300 ${isVisible ? 'opacity-100' : 'opacity-0'} ${className || ''}`}
       onClick={scrollToTop}
     >
       <ArrowUp size={24} />
