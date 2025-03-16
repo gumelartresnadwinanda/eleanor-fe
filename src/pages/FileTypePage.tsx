@@ -19,6 +19,7 @@ import { MediaResponse, Media } from "../types/MediaResponse";
 import { Tag } from "../types/TagResponse";
 import { groupMediaByDate } from "../utils/groupMediaByDate";
 import { serializeParams } from "../utils/serializeParams";
+import SortingButton from "../components/buttons/SortingButton";
 
 const FileTypePage = () => {
   const { isPhoneScreen } = useOutletContext<{ isPhoneScreen: boolean }>();
@@ -28,6 +29,8 @@ const FileTypePage = () => {
   const [isGridView, setIsGridView] = useState(true);
   const [mode, setMode] = useState(localStorage.getItem("mode") || "unprotected");
   const [media, setMedia] = useState<Media[]>([]);
+  const [order, setOrder] = useState<'asc' | 'desc'>('desc');
+  const orderRef = useRef(order);
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -62,6 +65,7 @@ const FileTypePage = () => {
             limit,
             file_type: fileType,
             tags: activeTags.length > 0 ? activeTags.join(",") : undefined,
+            sort_order: order,
             ...(isProtected !== undefined && { is_protected: isProtected }),
           })}`,
           { withCredentials: true }
@@ -92,8 +96,13 @@ const FileTypePage = () => {
       setPage(1);
       return;
     }
+    if (orderRef.current !== order && page !== 1) {
+      orderRef.current = order;
+      setPage(1);
+      return;
+    }
     fetchMedia(page);
-  }, [page, limit, fileType, activeTags, mode]);
+  }, [page, limit, fileType, activeTags, mode, order]);
 
   const loadMoreMedia = () => {
     if (hasMore) {
@@ -115,6 +124,7 @@ const FileTypePage = () => {
       <Title text={`Media by File Type: ${fileType}`} />
       <Description text={`Here you can browse media filtered by file type (${fileType}).`} />
       <TagList tags={tags} activeTags={activeTags} onTagClick={toggleTag} type="toggle" /> {/* Add TagToggleList component */}
+      <SortingButton order={order} onToggleOrder={() => setOrder(order === 'asc' ? 'desc' : 'asc')} />
       {error && <Popup message={error} onClose={() => setError(null)} />}
       {media.length === 0 ? (
         <EmptyMedia message="No media available." />
@@ -122,13 +132,15 @@ const FileTypePage = () => {
         <GroupedMediaGrid groupedMedia={groupedMedia} isGridView={isGridView} setSelectedMedia={setSelectedMedia} />
       )}
       {hasMore && media.length > 0 && (
-        <Button
-          variant="secondary"
-          className="mt-4"
-          onClick={loadMoreMedia}
-        >
-          Load More
-        </Button>
+        <div className="flex justify-center">
+          <Button
+            variant="secondary"
+            className="mt-4"
+            onClick={loadMoreMedia}
+          >
+            Load More
+          </Button>
+        </div>
       )}
       <MediaModal
         media={media}

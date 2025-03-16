@@ -125,6 +125,9 @@ const MediaModal = ({ media, selectedMedia, setSelectedMedia, isPhoneScreen }: M
       <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
         {selectedMedia.file_type === "photo" ? (
           <div className="relative max-w-full max-h-full" style={{ width: '100%', height: '100%' }}> {/* Ensure container size */}
+            {!isHighResLoaded && (
+              <div className="absolute top-4 left-4 spinner"></div>
+            )}
             <img
               key={`${selectedMedia.id}-low`}
               src={`${selectedMedia.thumbnail_md}`}

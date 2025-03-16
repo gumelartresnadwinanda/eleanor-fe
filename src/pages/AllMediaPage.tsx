@@ -12,6 +12,7 @@ import MediaModal from "../components/media/MediaModal";
 import Popup from "../components/utilities/Popup";
 import Title from "../components/layout/Title";
 import TagList from "../components/tags/TagList";
+import SortingButton from "../components/buttons/SortingButton";
 
 import { ELEANOR_BASE_URL } from "../config";
 import { PAGINATION_LIMITS } from "../constants/pagination";
@@ -22,19 +23,23 @@ import { serializeParams } from "../utils/serializeParams";
 
 function AllMediaPage() {
   const { isPhoneScreen } = useOutletContext<{ isPhoneScreen: boolean; }>();
-  const [selectedMedia, setSelectedMedia] = useState<Media | null>(null);
-  const [isGridView, setIsGridView] = useState(true);
-  const [mode, setMode] = useState(localStorage.getItem("mode") || "unprotected");
-  const [media, setMedia] = useState<Media[]>([]);
-  const [page, setPage] = useState(1);
-  const [hasMore, setHasMore] = useState(true);
-  const [error, setError] = useState<string | null>(null);
   const [activeTags, setActiveTags] = useState<string[]>([]);
-  const [tags, setTags] = useState<Tag[]>([]);
+  const [error, setError] = useState<string | null>(null);
+  const [hasMore, setHasMore] = useState(true);
+  const [isGridView, setIsGridView] = useState(true);
+  const [media, setMedia] = useState<Media[]>([]);
+  const [mode, setMode] = useState(localStorage.getItem("mode") || "unprotected");
   const modeRef = useRef(mode);
+  const [order, setOrder] = useState<'asc' | 'desc'>('desc');
+  const orderRef = useRef(order);
+  const [page, setPage] = useState(1);
+  const [selectedMedia, setSelectedMedia] = useState<Media | null>(null);
+  const [tags, setTags] = useState<Tag[]>([]);
+  const [loading, setLoading] = useState(false); // Add loading state
 
   const limit = PAGINATION_LIMITS.high;
 
+  console.log('islodaing', loading)
   useEffect(() => {
     const fetchTags = async () => {
       try {
@@ -55,6 +60,7 @@ function AllMediaPage() {
 
   useEffect(() => {
     const fetchMedia = async (page: number) => {
+      setLoading(true);
       try {
         const isProtected = mode === "protected" ? true : mode === "unprotected" ? false : undefined;
         const response = await axios.get<MediaResponse>(
@@ -62,6 +68,7 @@ function AllMediaPage() {
             page,
             limit,
             tags: activeTags.length > 0 ? activeTags.join(",") : undefined,
+            sort_order: order,
             ...(isProtected !== undefined && { is_protected: isProtected }),
           })}`,
           { withCredentials: true }
@@ -79,6 +86,8 @@ function AllMediaPage() {
         setHasMore(response.data.data.length >= limit);
       } catch (error) {
         setError(`Failed to fetch media. ${error}`);
+      } finally {
+        setLoading(false); // Set loading to false when fetching ends
       }
     };
     if (modeRef.current !== mode && page !== 1) {
@@ -86,11 +95,16 @@ function AllMediaPage() {
       setPage(1);
       return;
     }
+    if (orderRef.current !== order && page !== 1) {
+      orderRef.current = order;
+      setPage(1);
+      return;
+    }
     fetchMedia(page);
-  }, [page, limit, activeTags, mode]);
+  }, [page, limit, activeTags, mode, order]);
 
   const loadMoreMedia = () => {
-    if (hasMore) {
+    if (hasMore && !loading) {
       setPage((prevPage) => prevPage + 1);
     }
   };
@@ -107,7 +121,8 @@ function AllMediaPage() {
     <Container>
       <Title text="All Media" />
       <Description text="Here you can browse all your media." />
-      <TagList tags={tags} activeTags={activeTags} onTagClick={toggleTag} type="toggle" /> {/* Add TagToggleList component */}
+      <TagList tags={tags} activeTags={activeTags} onTagClick={toggleTag} type="toggle" />
+      <SortingButton order={order} onToggleOrder={() => setOrder(order === 'asc' ? 'desc' : 'asc')} />
       {error && <Popup message={error} onClose={() => setError(null)} />}
       {media.length === 0 ? (
         <EmptyMedia message="No media available." />
@@ -115,13 +130,16 @@ function AllMediaPage() {
         <GroupedMediaGrid groupedMedia={groupedMedia} isGridView={isGridView} setSelectedMedia={setSelectedMedia} />
       )}
       {hasMore && media.length > 0 && (
-        <Button
-          variant="secondary"
-          className="mt-4"
-          onClick={loadMoreMedia}
-        >
-          Load More
-        </Button>
+        <div className="flex justify-center">
+          <Button
+            variant="secondary"
+            className="mt-4"
+            onClick={loadMoreMedia}
+            disabled={loading}
+          >
+            {loading ? <div className="spinner" /> : "Load More"}
+          </Button>
+        </div>
       )}
       <MediaModal
         media={media}

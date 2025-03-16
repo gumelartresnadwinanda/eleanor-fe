@@ -18,6 +18,7 @@ import { PAGINATION_LIMITS } from "../constants/pagination";
 import { Media, MediaResponse } from "../types/MediaResponse";
 import { groupMediaByDate } from "../utils/groupMediaByDate";
 import { serializeParams } from "../utils/serializeParams";
+import SortingButton from "../components/buttons/SortingButton";
 
 const GroupedTagPage = () => {
   const { tag } = useParams<{ tag: string }>();
@@ -26,6 +27,8 @@ const GroupedTagPage = () => {
   const [selectedMedia, setSelectedMedia] = useState<Media | null>(null);
   const [isGridView, setIsGridView] = useState(true);
   const [mode, setMode] = useState(localStorage.getItem("mode") || "unprotected");
+  const [order, setOrder] = useState<'asc' | 'desc'>('desc');
+  const orderRef = useRef(order);
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -44,6 +47,7 @@ const GroupedTagPage = () => {
             page,
             limit,
             file_type: activeFileType,
+            sort_order: order,
             ...(isProtected !== undefined && { is_protected: isProtected }),
           })}`,
           { withCredentials: true }
@@ -74,8 +78,13 @@ const GroupedTagPage = () => {
       setPage(1);
       return;
     }
+    if (orderRef.current !== order && page !== 1) {
+      orderRef.current = order;
+      setPage(1);
+      return;
+    }
     fetchMedia(page);
-  }, [page, limit, tag, activeFileType, mode]);
+  }, [page, limit, tag, activeFileType, mode, order]);
 
   const loadMoreMedia = () => {
     if (hasMore) {
@@ -95,6 +104,7 @@ const GroupedTagPage = () => {
       <Title text={`Media tagged with "${tag}"`} withBack />
       <Description text={`Here you can browse all media tagged with "${tag}".`} />
       <FileTypeToggleList activeFileType={activeFileType} onFileTypeClick={toggleFileType} /> {/* Add FileTypeToggleList component */}
+      <SortingButton order={order} onToggleOrder={() => setOrder(order === 'asc' ? 'desc' : 'asc')} />
       {error && <Popup message={error} onClose={() => setError(null)} />}
       {media.length === 0 ? (
         <EmptyMedia message="No media available for this tag." />
@@ -102,13 +112,15 @@ const GroupedTagPage = () => {
         <GroupedMediaGrid groupedMedia={groupedMedia} isGridView={isGridView} setSelectedMedia={setSelectedMedia} />
       )}
       {hasMore && media.length > 0 && (
-        <Button
-          variant="secondary"
-          className="mt-4"
-          onClick={loadMoreMedia}
-        >
-          Load More
-        </Button>
+        <div className="flex justify-center">
+          <Button
+            variant="secondary"
+            className="mt-4"
+            onClick={loadMoreMedia}
+          >
+            Load More
+          </Button>
+        </div>
       )}
       <MediaModal
         media={media}

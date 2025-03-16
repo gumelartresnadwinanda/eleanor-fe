@@ -33,6 +33,7 @@ const FloatingButtons: React.FC<FloatingButtonsProps> = ({
       {showButtons && (
         <>
           {showScrollToTop && <ScrollToTopButton className="transition-opacity duration-300 opacity-100" />}
+          {user && <ProtectedModeButton setMode={setMode} className="transition-opacity duration-300 opacity-100" />}
           {showToggleView && (
             <ToggleViewButton
               isGridView={isGridView}
@@ -40,7 +41,6 @@ const FloatingButtons: React.FC<FloatingButtonsProps> = ({
               className="transition-opacity duration-300 opacity-100"
             />
           )}
-          {user && <ProtectedModeButton setMode={setMode} className="transition-opacity duration-300 opacity-100" />}
         </>
       )}
       <Button
