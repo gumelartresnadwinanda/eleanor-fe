@@ -20,6 +20,8 @@ import { Media, MediaResponse } from "../types/MediaResponse";
 import { Tag } from "../types/TagResponse";
 import { groupMediaByDate } from "../utils/groupMediaByDate";
 import { serializeParams } from "../utils/serializeParams";
+import FileTypeButton from "../components/buttons/FileTypeButton";
+import { FileType } from "../types/FileTypes";
 
 function AllMediaPage() {
   const { isPhoneScreen } = useOutletContext<{ isPhoneScreen: boolean; }>();
@@ -35,11 +37,13 @@ function AllMediaPage() {
   const [page, setPage] = useState(1);
   const [selectedMedia, setSelectedMedia] = useState<Media | null>(null);
   const [tags, setTags] = useState<Tag[]>([]);
+  const [type, setType] = useState<FileType>("all");
+  const typeRef = useRef(type);
   const [loading, setLoading] = useState(false); // Add loading state
 
   const limit = PAGINATION_LIMITS.high;
+  const types: FileType[] = ["all", "photo", "video"];
 
-  console.log('islodaing', loading)
   useEffect(() => {
     const fetchTags = async () => {
       try {
@@ -69,6 +73,7 @@ function AllMediaPage() {
             limit,
             tags: activeTags.length > 0 ? activeTags.join(",") : undefined,
             sort_order: order,
+            file_type: type,
             ...(isProtected !== undefined && { is_protected: isProtected }),
           })}`,
           { withCredentials: true }
@@ -100,8 +105,13 @@ function AllMediaPage() {
       setPage(1);
       return;
     }
+    if (typeRef.current !== type && page !== 1) {
+      typeRef.current = type;
+      setPage(1);
+      return;
+    }
     fetchMedia(page);
-  }, [page, limit, activeTags, mode, order]);
+  }, [page, limit, activeTags, mode, order, type]);
 
   const loadMoreMedia = () => {
     if (hasMore && !loading) {
@@ -115,6 +125,11 @@ function AllMediaPage() {
     setPage(1); // Reset page to 1 when tags change
   };
 
+  const changeType = () => {
+    const nextTypeIndex = (types.indexOf(type) + 1) % types.length;
+    setType(types[nextTypeIndex]);
+  }
+
   const groupedMedia = groupMediaByDate(media);
 
   return (
@@ -122,7 +137,10 @@ function AllMediaPage() {
       <Title text="All Media" />
       <Description text="Here you can browse all your media." />
       <TagList tags={tags} activeTags={activeTags} onTagClick={toggleTag} type="toggle" />
-      <SortingButton order={order} onToggleOrder={() => setOrder(order === 'asc' ? 'desc' : 'asc')} />
+      <div className="flex gap-2">
+        <SortingButton order={order} onToggleOrder={() => setOrder(order === 'asc' ? 'desc' : 'asc')} />
+        <FileTypeButton type={type} onToggleType={changeType} />
+      </div>
       {error && <Popup message={error} onClose={() => setError(null)} />}
       {media.length === 0 ? (
         <EmptyMedia message="No media available." />
