@@ -15,7 +15,7 @@ const MediaGrid = ({ media, isGridView, setSelectedMedia }: MediaGridProps) => {
       {media.map((item, index) => (
         <div key={index} className="relative max-w-[400px] mx-auto">
           <img
-            src={isGridView ? item.thumbnail_md : item.thumbnail_lg}
+            src={isGridView ? item.thumbnail_md || item.file_path : item.thumbnail_lg || item.file_path}
             alt={`Thumbnail ${index + 1}`}
             className={`w-full h-auto ${isGridView ? 'aspect-square' : ''} object-cover cursor-pointer`}
             onClick={() => setSelectedMedia(item)}
