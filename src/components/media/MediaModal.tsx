@@ -128,7 +128,7 @@ const MediaModal = ({ media, selectedMedia, setSelectedMedia, isPhoneScreen }: M
             {!isHighResLoaded && (
               <div className="absolute top-4 left-4 spinner"></div>
             )}
-            <img
+            {selectedMedia.thumbnail_md && <img
               key={`${selectedMedia.id}-low`}
               src={`${selectedMedia.thumbnail_md}`}
               alt="Low resolution"
@@ -136,12 +136,12 @@ const MediaModal = ({ media, selectedMedia, setSelectedMedia, isPhoneScreen }: M
               onClick={(e) => e.stopPropagation()}
               onAnimationEnd={() => setAnimationClass("")}
               style={{ transition: 'opacity 0.5s ease-in-out' }} // Smooth transition
-            />
+            />}
             <img
               key={selectedMedia.id}
               src={selectedMedia.file_path}
               alt="Full size"
-              className={`absolute inset-0 w-full h-full object-contain ${animationClass} ${isHighResLoaded ? 'opacity-100' : 'opacity-0'}`}
+              className={`absolute inset-0 w-full h-full object-contain ${animationClass} ${isHighResLoaded || !selectedMedia.thumbnail_md ? 'opacity-100' : 'opacity-0'}`}
               onClick={(e) => e.stopPropagation()}
               onLoad={() => {
                 setIsHighResLoaded(true)
