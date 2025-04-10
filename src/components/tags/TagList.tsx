@@ -17,9 +17,10 @@ const TagList: React.FC<TagListProps> = ({ tags, activeTags, onTagClick, type })
           <Link
             key={tag.id}
             to={`/tags/${tag.name}/group`}
-            className="inline-block px-3 py-1 m-1 bg-sky-200 dark:bg-slate-400 text-black bg:text-white font-bold rounded-sm no-underline transition duration-300 ease-in-out hover:bg-sky-400 dark:hover:bg-slate-900 hover:text-white"
+            className="flex-col inline-block px-3 py-3 m-1 shadow dark:shadow-gray-900 text-black dark:text-white font-bold rounded-sm no-underline transition duration-300 ease-in-out"
           >
-            {tag.name}
+            {tag.last_media && <img src={tag.last_media} alt={tag.name} className="inline-block h-20 object-cover" />}
+            <p className="block p-1">{tag.name}</p>
           </Link>
         ) : (
           <span

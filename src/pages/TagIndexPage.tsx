@@ -30,6 +30,7 @@ const TagIndexPage = () => {
             ...(isProtected !== undefined && { is_protected: isProtected }),
             sort_order: order,
             sort_by: "name",
+            check_media: true,
           })}`,
           { withCredentials: true }
         );
