@@ -11,3 +11,13 @@ export interface TagsResponse {
   prev: number | null;
   count: string;
 }
+export interface TagRecommendation {
+  id: string;
+  tag: string;
+  last_media?: string | null;
+}
+
+export interface TagRecommendationResponse {
+  data: TagRecommendation[];
+  count: number;
+}

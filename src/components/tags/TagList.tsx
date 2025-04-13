@@ -10,31 +10,37 @@ interface TagListProps {
 }
 
 const TagList: React.FC<TagListProps> = ({ tags, activeTags, onTagClick, type }) => {
-  return (
+  if (type !== "link") return (
     <div className="mt-4">
       {tags.map((tag) => (
-        type === "link" ? (
+        <span
+          key={tag.id}
+          onClick={() => onTagClick && onTagClick(tag.name)}
+          className={`inline-block px-3 py-1 m-1 font-bold rounded-sm no-underline transition duration-300 ease-in-out cursor-pointer ${activeTags && activeTags.includes(tag.name)
+            ? "bg-sky-800 dark:bg-slate-50 text-white dark:text-black"
+            : "bg-sky-50 dark:bg-slate-400 text-black"
+            }`}
+        >
+          {tag.name}
+        </span>
+      ))}
+    </div>
+  )
+  return (
+    <div className="mt-4">
+      <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-2">
+        {tags.map((tag) => (
           <Link
             key={tag.id}
             to={`/tags/${tag.name}/group`}
-            className="flex-col inline-block px-3 py-3 m-1 shadow dark:shadow-gray-900 text-black dark:text-white font-bold rounded-sm no-underline transition duration-300 ease-in-out"
+            className="flex-col inline-block px-3 py-3 m-1 shadow bg-gray-50 text-black font-bold rounded-sm no-underline transition duration-300 ease-in-out"
           >
-            {tag.last_media && <img src={tag.last_media} alt={tag.name} className="inline-block h-20 object-cover" />}
+            {tag.last_media &&
+              <img src={tag.last_media} alt={tag.name} className="inline-block h-50 object-cover" />}
             <p className="block p-1">{tag.name}</p>
           </Link>
-        ) : (
-          <span
-            key={tag.id}
-            onClick={() => onTagClick && onTagClick(tag.name)}
-            className={`inline-block px-3 py-1 m-1 font-bold rounded-sm no-underline transition duration-300 ease-in-out cursor-pointer ${activeTags && activeTags.includes(tag.name)
-              ? "bg-sky-800 dark:bg-slate-50 text-white dark:text-black"
-              : "bg-sky-50 dark:bg-slate-400 text-black"
-              }`}
-          >
-            {tag.name}
-          </span>
-        )
-      ))}
+        ))}
+      </div>
     </div>
   );
 };

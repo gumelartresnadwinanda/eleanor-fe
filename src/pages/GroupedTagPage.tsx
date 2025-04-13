@@ -19,6 +19,7 @@ import { Media, MediaResponse } from "../types/MediaResponse";
 import { groupMediaByDate } from "../utils/groupMediaByDate";
 import { serializeParams } from "../utils/serializeParams";
 import SortingButton from "../components/buttons/SortingButton";
+import TagRecommendation from "../components/tags/TagRecommendation";
 
 const GroupedTagPage = () => {
   const { tag } = useParams<{ tag: string }>();
@@ -122,6 +123,7 @@ const GroupedTagPage = () => {
           </Button>
         </div>
       )}
+      <TagRecommendation tag={tag} isProtected={mode === "protected" ? true : mode === "unprotected" ? false : undefined} />
       <MediaModal
         media={media}
         selectedMedia={selectedMedia}

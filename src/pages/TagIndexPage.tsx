@@ -26,11 +26,12 @@ const TagIndexPage = () => {
         const isProtected = mode === "protected" ? true : mode === "unprotected" ? false : undefined;
         const response = await axios.get<TagsResponse>(
           `${ELEANOR_BASE_URL}/tags?${serializeParams({
-            limit: 500,
+            limit: 50,
             ...(isProtected !== undefined && { is_protected: isProtected }),
             sort_order: order,
             sort_by: "name",
             check_media: true,
+            type: 'stage'
           })}`,
           { withCredentials: true }
         );
