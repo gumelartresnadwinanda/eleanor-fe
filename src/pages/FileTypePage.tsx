@@ -121,7 +121,7 @@ const FileTypePage = () => {
 
   return (
     <Container>
-      <Title text={`Media by File Type: ${fileType}`} />
+      <Title text={`Media by File Type: ${fileType}`} withBack />
       <Description text={`Here you can browse media filtered by file type (${fileType}).`} />
       <TagList tags={tags} activeTags={activeTags} onTagClick={toggleTag} type="toggle" /> {/* Add TagToggleList component */}
       <SortingButton order={order} onToggleOrder={() => setOrder(order === 'asc' ? 'desc' : 'asc')} />

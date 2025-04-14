@@ -1,5 +1,5 @@
 import { Link, useLocation } from "react-router-dom";
-import { Home, Library, ListMusic, Tag, House, Video, Image, Gamepad2 } from "lucide-react";
+import { Home, Library, Tag, House, Video, Image, Gamepad2, Album, PersonStanding } from "lucide-react";
 
 const navItems = [
   {
@@ -38,11 +38,18 @@ const navItems = [
     to: "/tags",
     icon: Tag,
     label: "Tags",
-  },
-  {
-    to: "/playlists",
-    icon: ListMusic,
-    label: "Playlists",
+    subItems: [
+      {
+        to: "/tags/album",
+        icon: Album,
+        label: "Album",
+      },
+      {
+        to: "/tags/person",
+        icon: PersonStanding,
+        label: "Person",
+      },
+    ],
   },
 ];
 

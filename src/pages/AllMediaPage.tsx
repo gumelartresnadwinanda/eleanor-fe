@@ -50,6 +50,8 @@ function AllMediaPage() {
         const isProtected = mode === "protected" ? true : mode === "unprotected" ? false : undefined;
         const response = await axios.get<{ data: Tag[]; }>(`${ELEANOR_BASE_URL}/tags?${serializeParams({
           ...(isProtected !== undefined && { is_protected: isProtected }),
+          popularity: true,
+          sort_order: "desc",
         })}`,
           { withCredentials: true }
         );
@@ -134,7 +136,7 @@ function AllMediaPage() {
 
   return (
     <Container>
-      <Title text="All Media" />
+      <Title text="All Media" withBack />
       <Description text="Here you can browse all your media." />
       <TagList tags={tags} activeTags={activeTags} onTagClick={toggleTag} type="toggle" />
       <div className="flex gap-2">
