@@ -44,7 +44,7 @@ const TagRecommendation: React.FC<TagRecommendationProps> = ({ tag, isProtected 
       <Title text={`More Like "${tag}"`} />
       {loading && (<p>Loading Recommendations</p>)}
       {!loading && recommendations?.length > 0 ? (
-        <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-2">
+        <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-6 xl:grid-cols-8 gap-2">
           {recommendations.map((rec) => (
             <Link
               key={rec.id}
@@ -56,7 +56,7 @@ const TagRecommendation: React.FC<TagRecommendationProps> = ({ tag, isProtected 
                 <img
                   src={rec.last_media}
                   alt={rec.tag}
-                  className="inline-block h-50 object-cover"
+                  className="inline-block h-50 object-cover w-full"
                 />
               )}
               <p className="block p-1">{rec.tag}</p>

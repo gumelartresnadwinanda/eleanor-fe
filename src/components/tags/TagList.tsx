@@ -28,7 +28,7 @@ const TagList: React.FC<TagListProps> = ({ tags, activeTags, onTagClick, type })
   )
   return (
     <div className="mt-4">
-      <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-2">
+      <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-6 xl:grid-cols-8 gap-2">
         {tags.map((tag) => (
           <Link
             key={tag.id}
@@ -36,7 +36,7 @@ const TagList: React.FC<TagListProps> = ({ tags, activeTags, onTagClick, type })
             className="flex-col inline-block px-3 py-3 m-1 shadow bg-gray-50 text-black font-bold rounded-sm no-underline transition duration-300 ease-in-out"
           >
             {tag.last_media &&
-              <img src={tag.last_media} alt={tag.name} className="inline-block h-50 object-cover" />}
+              <img src={tag.last_media} alt={tag.name} className="inline-block h-50 w-full object-cover" />}
             <p className="block p-1">{tag.name}</p>
           </Link>
         ))}
