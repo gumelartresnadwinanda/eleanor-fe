@@ -6,6 +6,7 @@ import MediaModalControls from "./MediaModalControls";
 
 interface MediaModalProps {
   media: Media[];
+  setMedia: (media: Media[]) => void;
   selectedMedia: Media | null;
   setSelectedMedia: (media: Media | null) => void;
   isPhoneScreen: boolean;
@@ -16,13 +17,14 @@ const preloadImage = (src: string) => {
   img.src = src;
 };
 
-const MediaModal = ({ media, selectedMedia, setSelectedMedia, isPhoneScreen }: MediaModalProps) => {
+const MediaModal = ({ media, selectedMedia, setSelectedMedia, isPhoneScreen, setMedia }: MediaModalProps) => {
   const [animationClass, setAnimationClass] = useState("");
   const [showTags, setShowTags] = useState(false);
   const [showInfo, setShowInfo] = useState(false);
   const [isZooming, setIsZooming] = useState(false);
   const [isHighResLoaded, setIsHighResLoaded] = useState(false);
   const navigate = useNavigate();
+
 
   const handleNextMedia = useCallback(() => {
     if (selectedMedia) {
@@ -50,6 +52,13 @@ const MediaModal = ({ media, selectedMedia, setSelectedMedia, isPhoneScreen }: M
     setSelectedMedia(null)
     navigate(`/tags/${tag}/group`);
   };
+
+  const handleDelete = useCallback(() => {
+    handleNextMedia();
+    if (selectedMedia) {
+      setMedia(media.filter(item => item.id !== selectedMedia.id));
+    }
+  }, [selectedMedia, setMedia, media, handleNextMedia]);
 
   useEffect(() => {
     let startX: number | null = null;
@@ -176,6 +185,7 @@ const MediaModal = ({ media, selectedMedia, setSelectedMedia, isPhoneScreen }: M
             setShowInfo={setShowInfo}
             handleTagClick={handleTagClick}
             setSelectedMedia={setSelectedMedia}
+            onDelete={handleDelete}
           />
         </div>
       </div>

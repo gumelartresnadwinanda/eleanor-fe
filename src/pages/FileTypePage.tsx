@@ -144,6 +144,7 @@ const FileTypePage = () => {
       )}
       <MediaModal
         media={media}
+        setMedia={setMedia}
         selectedMedia={selectedMedia}
         setSelectedMedia={setSelectedMedia}
         isPhoneScreen={isPhoneScreen}

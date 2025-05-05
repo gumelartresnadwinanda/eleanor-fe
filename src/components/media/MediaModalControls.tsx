@@ -1,6 +1,11 @@
-import { Tag, Info, X } from "lucide-react";
+import { Tag, Info, X, Trash } from "lucide-react";
 import { Media } from "../../types/MediaResponse";
 import { Button } from "../buttons/Button";
+import { useState } from "react";
+import ConfirmDialog from "../confirmationDialog";
+import axios from "axios";
+import { ELEANOR_BASE_URL } from "../../config";
+import NotificationPopup from "../NotificationPopup";
 
 interface MediaModalControlsProps {
   selectedMedia: Media;
@@ -10,6 +15,7 @@ interface MediaModalControlsProps {
   setShowInfo: (show: boolean) => void;
   handleTagClick: (tag: string) => void;
   setSelectedMedia: (media: Media | null) => void;
+  onDelete: () => void
 }
 
 const MediaModalControls = ({
@@ -20,7 +26,29 @@ const MediaModalControls = ({
   setShowInfo,
   handleTagClick,
   setSelectedMedia,
+  onDelete
 }: MediaModalControlsProps) => {
+  const [showConfirm, setShowConfirm] = useState(false);
+  const [showPopup, setShowPopup] = useState(false);
+  const [popupMessage, setPopupMessage] = useState('');
+  const [popupType, setPopupType] = useState<'success' | 'error'>('success');
+
+  const deleteMedia = async (id: number, deleteWithData = false) => {
+    const response = await axios.delete(`${ELEANOR_BASE_URL}/medias/${id}?deleteWithData=${deleteWithData}`);
+    if (response.status == 200) {
+      setPopupMessage('Delete Success!');
+      setPopupType('success');
+      setShowPopup(true);
+      setTimeout(() => setShowPopup(false), 3000);
+      onDelete();
+    } else {
+      setPopupMessage('Something went wrong!');
+      setPopupType('error');
+      setShowPopup(true);
+      setTimeout(() => setShowPopup(false), 3000);
+    }
+  }
+
   return (
     <>
       {showTags && selectedMedia.tags.split(',').map((tag, index) => (
@@ -74,6 +102,35 @@ const MediaModalControls = ({
       >
         <X size={24} />
       </Button>
+      <Button
+        className="p-2"
+        onClick={() => setShowConfirm(true)}><Trash /></Button>
+      {showConfirm && (
+        <ConfirmDialog
+          title="Delete Media?"
+          message="Are you sure you want to delete this item?"
+          onCancel={() => setShowConfirm(false)}
+          onConfirm={() => {
+            deleteMedia(selectedMedia.id);
+            setShowConfirm(false);
+          }}
+          extraButton={{
+            label: 'Yes, also remove from drive',
+            onClick: () => {
+              deleteMedia(selectedMedia.id, true);
+              setShowConfirm(false);
+            },
+            style: { backgroundColor: 'gray', color: 'white' },
+          }}
+        />
+      )}
+      {showPopup && (
+        <NotificationPopup
+          message={popupMessage}
+          onClose={() => setShowPopup(false)}
+          type={popupType}
+        />
+      )}
     </>
   );
 };

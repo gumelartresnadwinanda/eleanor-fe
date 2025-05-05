@@ -126,6 +126,7 @@ const GroupedTagPage = () => {
       <TagRecommendation tag={tag} isProtected={mode === "protected" ? true : mode === "unprotected" ? false : undefined} />
       <MediaModal
         media={media}
+        setMedia={setMedia}
         selectedMedia={selectedMedia}
         setSelectedMedia={setSelectedMedia}
         isPhoneScreen={isPhoneScreen}
