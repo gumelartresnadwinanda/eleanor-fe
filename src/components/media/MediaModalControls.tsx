@@ -58,6 +58,7 @@ const MediaModalControls = ({
         <Info size={24} />
         {showInfo && (
           <div className="absolute top-full right-0 mt-2 bg-white text-black p-2 rounded-md shadow-lg w-auto whitespace-nowrap">
+            <p><strong>ID:</strong> {selectedMedia.id}</p>
             <p><strong>Title:</strong> {selectedMedia.title}</p>
             <p><strong>Created At:</strong> {new Date(selectedMedia.created_at).toLocaleString()}</p>
           </div>
