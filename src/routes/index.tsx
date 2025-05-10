@@ -8,7 +8,7 @@ const TagIndexPage = lazy(() => import("../pages/TagIndexPage"));
 const FileTypePage = lazy(() => import("../pages/FileTypePage"));
 const TagGroupedPage = lazy(() => import("../pages/GroupedTagPage"));
 const FootballPage = lazy(() => import("../pages/Football"));
-
+// TODO: add dedicated profile page to set up the config for the user
 const AppRoutes = () => {
   return (
     <Router>
