@@ -2,10 +2,10 @@ import { Tag, Info, X, Trash } from "lucide-react";
 import { Media } from "../../types/MediaResponse";
 import { Button } from "../buttons/Button";
 import { useState } from "react";
-import ConfirmDialog from "../confirmationDialog";
 import axios from "axios";
 import { ELEANOR_BASE_URL } from "../../config";
 import NotificationPopup from "../NotificationPopup";
+import ConfirmDialog from "../ConfirmationDialog";
 
 interface MediaModalControlsProps {
   selectedMedia: Media;
@@ -48,6 +48,9 @@ const MediaModalControls = ({
       setTimeout(() => setShowPopup(false), 3000);
     }
   }
+
+  // TODO: add function to open the media in drive (ensure the device used is same device used to save the media)
+  // TODO: add function to handle edit tags in the media, can be modal or inline edit
 
   return (
     <>
