@@ -52,6 +52,41 @@ const MediaModalControls = ({
   // TODO: add function to open the media in drive (ensure the device used is same device used to save the media)
   // TODO: add function to handle edit tags in the media, can be modal or inline edit
 
+  const copyToClipboard = async (text: string | number) => {
+    if (navigator.clipboard) {
+      try {
+        await navigator.clipboard.writeText(`${text}`);
+        setPopupMessage('ID Copied to clipboard!');
+        setPopupType('success');
+        setShowPopup(true);
+        setTimeout(() => setShowPopup(false), 3000);
+      } catch (err) {
+        console.error("Failed to copy!", err);
+      }
+    } else {
+      fallbackCopyToClipboard(`${text}`);
+    }
+  };
+
+  const fallbackCopyToClipboard = (text: string) => {
+    const textarea = document.createElement("textarea");
+    textarea.value = text;
+    document.body.appendChild(textarea);
+    textarea.select();
+    try {
+      const successful = document.execCommand("copy");
+      if (successful) {
+        setPopupMessage('ID Copied to clipboard!');
+        setPopupType('success');
+        setShowPopup(true);
+        setTimeout(() => setShowPopup(false), 3000);
+      }
+    } catch (err) {
+      console.error("Fallback: Copy failed", err);
+    }
+    document.body.removeChild(textarea);
+  };
+
   return (
     <>
       {showTags && selectedMedia.tags.split(',').map((tag, index) => (
@@ -88,8 +123,13 @@ const MediaModalControls = ({
       >
         <Info size={24} />
         {showInfo && (
-          <div className="absolute top-full right-0 mt-2 bg-white text-black p-2 rounded-md shadow-lg w-auto whitespace-nowrap">
-            {/* TODO: Add copy id to clipboard on click */}
+          <div
+            className="absolute top-full right-0 mt-2 bg-white text-black p-2 rounded-md shadow-lg w-auto whitespace-nowrap"
+            onClick={(e) => {
+              copyToClipboard(selectedMedia.id);
+              e.stopPropagation();
+            }}
+          >
             <p><strong>ID:</strong> {selectedMedia.id}</p>
             <p><strong>Title:</strong> {selectedMedia.title}</p>
             <p><strong>Created At:</strong> {new Date(selectedMedia.created_at).toLocaleString()}</p>
